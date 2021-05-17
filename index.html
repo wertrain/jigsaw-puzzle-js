@@ -15,7 +15,7 @@
       let pointConvexHull = []
 
       function updateCanvas() {
-        let ctx = canvasContext
+        let ctx = canvasContext;
         // キャンバスのクリア
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
@@ -27,6 +27,7 @@
     </script>
 
     <div class="container">
+      <canvas id="canvas" width="1280" height="720"></canvas>
     </div> <!-- /container -->
     
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -35,7 +36,7 @@
     <script src="./js/common.js"></script>
     <script>
       canvas = JigsawPuzzle.Common.run(function(context) {
-        canvasContext = context;       
+        canvasContext = context;
       });
       canvas.addEventListener('click', onClick, false);
     </script>
