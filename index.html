@@ -26,7 +26,7 @@
 
     <div class="container">
       <canvas id="canvas" width="1280" height="720"></canvas>
-      <canvas id="background-canvas" width="1280" height="720" hidden></canvas>
+      <canvas id="background-canvas" width="100" height="100" hidden></canvas>
     </div> <!-- /container -->
     
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -34,29 +34,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="./js/common.js"></script>
     <script src="./js/resources.js"></script>
+    <script src="./js/jigsawpuzzle.js"></script>
     <script>
       //imageList = JigsawPuzzle.Common.loadImages(["./image/sample.jpg"], function() {
-      imageList = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample], function() {
+      let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
+      loaded.then(function(imageList) {
         canvas = JigsawPuzzle.Common.run(function(context) {
-          let background = document.getElementById("background-canvas");
-          let backgroundContext = background.getContext("2d");
-          let image = imageList[0];
-          let width = canvasWidth / 10, height = canvasHeight / 10;
-
-          // 分割後のデータを保存する
-          let imgList = [];
-          // 縦横の個数を取得する
-          let wLength = image.width / width;
-          let hLength = image.height / height;
-
-          // 分割数だけリストに入れる
-          for(let num = 0; num < wLength * hLength; num++) {
-            backgroundContext.clearRect(0,0, background.width, background.height);
-            backgroundContext.drawImage(image, width * (num % wLength), height * Math.floor(num / wLength), width, height, 0, 0, width, height);
-            imgList.push(background.toDataURL());
-            console.log(imgList);
-          }
-          //context.drawImage(imgList[2], 0, 0)
+          let p = JigsawPuzzle.Core.createPieces(imageList[0], 5, 5);
+          p.then(function(pieces){
+            context.drawImage(pieces[4], 0, 0);
+          });
         });
         canvas.addEventListener('click', onClick, false);
       });
