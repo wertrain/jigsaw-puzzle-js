@@ -11,7 +11,13 @@
     P2100:16, P2102:17, P2211:18
   };
 
-  let createPieces = function(context, param) {
+  /**
+   * ピースを作成
+   * @param {*} context 
+   * @param {*} param 
+   * @returns 
+   */
+  let clipPiece = function(context, param) {
     switch (param.pattern) {
       case PiecePattern.P0011:
         context.beginPath();
@@ -46,7 +52,7 @@
     let dataURLList = []
     for(let num = 0; num < row * column; num++) {
       context.clearRect(0,0, canvas.width, canvas.height);
-      createPieces(context, {
+      clipPiece(context, {
         pattern: PiecePattern.P0011,
         width: width,
         jointWidth: jointWidth,
