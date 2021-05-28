@@ -14,5 +14,9 @@ namespace PiecePathMakerLib
     /// </summary>
     class Snake
     {
+        public Snake()
+        {
+
+        }
     }
 }
