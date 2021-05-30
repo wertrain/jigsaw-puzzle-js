@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenCvSharp;
 
 namespace PiecePathMakerLib
 {
@@ -16,7 +18,7 @@ namespace PiecePathMakerLib
     {
         public Snake()
         {
-
+            // 自前で実装せずに OpenCV に頼る
         }
     }
 }
