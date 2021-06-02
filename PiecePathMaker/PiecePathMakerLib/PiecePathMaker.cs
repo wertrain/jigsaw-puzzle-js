@@ -48,7 +48,7 @@ namespace PiecePathMakerLib
             CvWindow w = new CvWindow();
             while (true)
             {
-                src.SnakeImage(contour, 0.8f, 0.0f, 0.3f, new CvSize(15, 15), new CvTermCriteria(1), true);
+                src.SnakeImage(contour, 0.1f, 0.01f, 0.01f, new CvSize(15, 15), new CvTermCriteria(1), true);
                 src.CvtColor(dst, ColorConversion.GrayToRgb);
                 for (int i = 0; i < contour.Length - 1; i++)
                 {

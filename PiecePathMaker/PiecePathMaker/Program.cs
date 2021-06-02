@@ -10,6 +10,7 @@ namespace PiecePathMaker
     {
         static void Main(string[] args)
         {
+            PiecePathMakerLib.PiecePathMaker.MakePointsFromFile(args[0]);
         }
     }
 }
