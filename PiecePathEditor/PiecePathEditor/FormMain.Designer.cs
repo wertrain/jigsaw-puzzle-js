@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.pictureBoxCanvas = new System.Windows.Forms.PictureBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStripMain = new System.Windows.Forms.MenuStrip();
+            this.toolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemOpenImage = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewPoints = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemOpenImage = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanelOutput = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
-            this.menuStrip1.SuspendLayout();
+            this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -53,19 +53,35 @@
             this.pictureBoxCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCanvas.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxCanvas.Name = "pictureBoxCanvas";
-            this.pictureBoxCanvas.Size = new System.Drawing.Size(318, 355);
+            this.pictureBoxCanvas.Size = new System.Drawing.Size(382, 415);
             this.pictureBoxCanvas.TabIndex = 0;
             this.pictureBoxCanvas.TabStop = false;
+            this.pictureBoxCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCanvas_MouseDown);
+            this.pictureBoxCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCanvas_MouseUp);
             // 
-            // menuStrip1
+            // menuStripMain
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemFile});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(511, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "File(&F)";
+            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
+            this.menuStripMain.Name = "menuStripMain";
+            this.menuStripMain.Size = new System.Drawing.Size(615, 24);
+            this.menuStripMain.TabIndex = 1;
+            this.menuStripMain.Text = "File(&F)";
+            // 
+            // toolStripMenuItemFile
+            // 
+            this.toolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemOpenImage});
+            this.toolStripMenuItemFile.Name = "toolStripMenuItemFile";
+            this.toolStripMenuItemFile.Size = new System.Drawing.Size(51, 20);
+            this.toolStripMenuItemFile.Text = "File(&F)";
+            // 
+            // toolStripMenuItemOpenImage
+            // 
+            this.toolStripMenuItemOpenImage.Name = "toolStripMenuItemOpenImage";
+            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemOpenImage.Text = "Open Image(&O)";
             // 
             // listViewPoints
             // 
@@ -76,7 +92,7 @@
             this.listViewPoints.HideSelection = false;
             this.listViewPoints.Location = new System.Drawing.Point(3, 3);
             this.listViewPoints.Name = "listViewPoints";
-            this.listViewPoints.Size = new System.Drawing.Size(183, 175);
+            this.listViewPoints.Size = new System.Drawing.Size(223, 205);
             this.listViewPoints.TabIndex = 1;
             this.listViewPoints.UseCompatibleStateImageBehavior = false;
             this.listViewPoints.View = System.Windows.Forms.View.Details;
@@ -91,20 +107,6 @@
             this.columnHeaderPoint.Text = "Point";
             this.columnHeaderPoint.Width = 56;
             // 
-            // toolStripMenuItemFile
-            // 
-            this.toolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemOpenImage});
-            this.toolStripMenuItemFile.Name = "toolStripMenuItemFile";
-            this.toolStripMenuItemFile.Size = new System.Drawing.Size(51, 20);
-            this.toolStripMenuItemFile.Text = "File(&F)";
-            // 
-            // toolStripMenuItemOpenImage
-            // 
-            this.toolStripMenuItemOpenImage.Name = "toolStripMenuItemOpenImage";
-            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemOpenImage.Text = "Open Image(&O)";
-            // 
             // splitContainerMain
             // 
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -118,8 +120,8 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.tableLayoutPanelOutput);
-            this.splitContainerMain.Size = new System.Drawing.Size(511, 355);
-            this.splitContainerMain.SplitterDistance = 318;
+            this.splitContainerMain.Size = new System.Drawing.Size(615, 415);
+            this.splitContainerMain.SplitterDistance = 382;
             this.splitContainerMain.TabIndex = 2;
             // 
             // tableLayoutPanelOutput
@@ -134,31 +136,31 @@
             this.tableLayoutPanelOutput.RowCount = 2;
             this.tableLayoutPanelOutput.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.98592F));
             this.tableLayoutPanelOutput.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.01408F));
-            this.tableLayoutPanelOutput.Size = new System.Drawing.Size(189, 355);
+            this.tableLayoutPanelOutput.Size = new System.Drawing.Size(229, 415);
             this.tableLayoutPanelOutput.TabIndex = 2;
             // 
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(3, 184);
+            this.textBox1.Location = new System.Drawing.Point(3, 214);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(183, 168);
+            this.textBox1.Size = new System.Drawing.Size(223, 198);
             this.textBox1.TabIndex = 2;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 379);
+            this.ClientSize = new System.Drawing.Size(615, 439);
             this.Controls.Add(this.splitContainerMain);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuStripMain);
+            this.MainMenuStrip = this.menuStripMain;
             this.Name = "FormMain";
             this.Text = "PathEditor";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStripMain.ResumeLayout(false);
+            this.menuStripMain.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
@@ -172,7 +174,7 @@
 
         #endregion
         private System.Windows.Forms.PictureBox pictureBoxCanvas;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStripMain;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenImage;
         private System.Windows.Forms.ListView listViewPoints;
