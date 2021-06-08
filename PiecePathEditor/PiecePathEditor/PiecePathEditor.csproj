@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandManager.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
