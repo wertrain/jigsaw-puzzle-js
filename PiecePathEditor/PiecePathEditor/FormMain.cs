@@ -42,8 +42,7 @@ namespace PiecePathEditor
         {
             InitializeComponent();
 
-            Points = new List<Point>();
-            CurrentPoint = null;
+            _commandManager = new CommandManager();
         }
 
         /// <summary>
@@ -53,14 +52,15 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void pictureBoxCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            foreach (var point in Points)
+            foreach (var point in _commandManager.Points)
             {
                 int x = e.X - point.X;
                 int y = e.Y - point.Y;
                 double r = Math.Sqrt(x * x + y * y);
 
-                if (r <= 3.0)
+                if (r <= PointRadius)
                 {
+                    MoveStartPoint = new Point(x, y);
                     CurrentPoint = point;
                     Sequence = PointSequence.Move;
                     return;
@@ -80,7 +80,33 @@ namespace PiecePathEditor
             switch (Sequence)
             {
                 case PointSequence.Add:
-                    Points.Add(new Point(e.X, e.Y));
+                    _commandManager.AddPoint(e.X, e.Y);
+                    UpdateAll();
+                    break;
+
+                case PointSequence.Move:
+                    _commandManager.MovePoint(MoveStartPoint, CurrentPoint.X, CurrentPoint.Y);
+                    MoveStartPoint = CurrentPoint = null;
+                    UpdateAll();
+                    break;
+            }
+
+            Sequence = PointSequence.None;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBoxCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            switch (Sequence)
+            {
+                case PointSequence.Move:
+                    CurrentPoint.X = e.X;
+                    CurrentPoint.Y = e.Y;
+                    UpdateCanvas();
                     break;
             }
         }
@@ -88,29 +114,67 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        private class Point
+        private void UpdateAll()
         {
-            /// <summary>
-            /// 
-            /// </summary>
-            public int X { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public int Y { get; set; }
-
-            /// <summary>
-            /// コンストラクタ
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            public Point(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
+            UpdateListView();
+            UpdateCanvas();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateListView()
+        {
+            listViewPoints.SuspendLayout();
+
+            listViewPoints.Items.Clear();
+            foreach (var point in _commandManager.Points)
+            {
+                var item = new ListViewItem();
+                item.Text = "Point";
+
+                var subItem = new ListViewItem.ListViewSubItem();
+                subItem.Text = $"({point.X},{point.Y})";
+                item.SubItems.Add(subItem);
+
+                listViewPoints.Items.Add(item);
+            }
+
+            listViewPoints.ResumeLayout();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateCanvas()
+        {
+            var canvas = pictureBoxCanvas;
+            canvas.Image?.Dispose();
+
+            var bitmap = new Bitmap(canvas.Width, canvas.Height);
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                var blackBrush = new SolidBrush(Color.Black);
+
+                Point prevPoint = null;
+                foreach (var point in _commandManager.Points)
+                {
+                    g.FillEllipse(blackBrush, new Rectangle(point.X - PointRadius, point.Y - PointRadius, PointRadius * 2, PointRadius * 2));
+
+                    if (prevPoint != null)
+                    {
+                        g.DrawLine(Pens.Black, prevPoint.X, prevPoint.Y, point.X, point.Y);
+                    }
+                    prevPoint = point;
+                }
+            }
+            canvas.Image = bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly int PointRadius = 5;
 
         /// <summary>
         /// 
@@ -120,11 +184,16 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        private List<Point> Points { get; set; }
+        private CommandManager _commandManager;
 
         /// <summary>
         /// 
         /// </summary>
-        private Point CurrentPoint { get; set; }
+        private Point CurrentPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Point MoveStartPoint;
     }
 }

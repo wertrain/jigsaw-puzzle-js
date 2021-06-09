@@ -7,33 +7,6 @@ using System.Threading.Tasks;
 namespace PiecePathEditor
 {
     /// <summary>
-    /// 座標
-    /// </summary>
-    public class Point
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
-
-    /// <summary>
     /// コマンドの基底クラス
     /// </summary>
     public class CommandBase
@@ -46,7 +19,16 @@ namespace PiecePathEditor
     /// </summary>
     public class CommandAddPoint : CommandBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point Point { get; }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="point"></param>
+        public CommandAddPoint(Point point) => Point = point;
     }
 
     /// <summary>
@@ -54,6 +36,25 @@ namespace PiecePathEditor
     /// </summary>
     public class CommandMovePoint :CommandBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point Point;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point MovedPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="moved"></param>
+        public CommandMovePoint(Point point, Point moved)
+        {
+            Point = point;
+            MovedPoint = moved;
+        }
     }
 }
