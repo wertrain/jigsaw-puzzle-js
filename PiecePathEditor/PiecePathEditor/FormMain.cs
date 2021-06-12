@@ -60,14 +60,33 @@ namespace PiecePathEditor
 
                 if (r <= PointRadius)
                 {
-                    MoveStartPoint = new Point(x, y);
                     CurrentPoint = point;
-                    Sequence = PointSequence.Move;
-                    return;
+                    break;
                 }
             }
 
-            Sequence = PointSequence.Add;
+            if (e.Button == MouseButtons.Left)
+            {
+                if (CurrentPoint == null)
+                {
+                    Sequence = PointSequence.Add;
+                }
+                else
+                {
+                    int x = e.X - CurrentPoint.X;
+                    int y = e.Y - CurrentPoint.Y;
+                    MoveStartPoint = new Point(x, y);
+
+                    Sequence = PointSequence.Move;
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (CurrentPoint != null)
+                {
+                    Sequence = PointSequence.Remove;
+                }
+            }
         }
 
         /// <summary>
@@ -87,6 +106,12 @@ namespace PiecePathEditor
                 case PointSequence.Move:
                     _commandManager.MovePoint(MoveStartPoint, CurrentPoint.X, CurrentPoint.Y);
                     MoveStartPoint = CurrentPoint = null;
+                    UpdateAll();
+                    break;
+
+                case PointSequence.Remove:
+                    _commandManager.RemovePoint(CurrentPoint);
+                    CurrentPoint = null;
                     UpdateAll();
                     break;
             }

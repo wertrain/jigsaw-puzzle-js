@@ -46,7 +46,7 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        public List<Point> Points;
+        public LinkedList<Point> Points;
 
         /// <summary>
         /// 
@@ -65,7 +65,7 @@ namespace PiecePathEditor
         public void AddPoint(Point point)
         {
             CommandQueue.Enqueue(new CommandAddPoint(point));
-            Points.Add(point);
+            Points.AddLast(point);
         }
 
         /// <summary>
@@ -75,13 +75,26 @@ namespace PiecePathEditor
         /// <param name="y"></param>
         public void MovePoint(Point point, int x, int y)
         {
-            var find = Points.Find(p => point == p);
+            var find = Points.Find(point);
             if (find != null)
             {
-                CommandQueue.Enqueue(new CommandMovePoint(new Point(find.X, find.Y), new Point(x, y)));
+                var findPoint = find.Value;
+                CommandQueue.Enqueue(new CommandMovePoint(new Point(findPoint.X, findPoint.Y), new Point(x, y)));
 
-                find.X = x;
-                find.Y = y;
+                findPoint.X = x;
+                findPoint.Y = y;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        public void RemovePoint(Point point)
+        {
+            if (Points.Remove(point))
+            {
+                CommandQueue.Enqueue(new CommandRemovePoint(point));
             }
         }
 
@@ -91,7 +104,7 @@ namespace PiecePathEditor
         public CommandManager()
         {
             CommandQueue = new Queue<CommandBase>();
-            Points = new List<Point>();
+            Points = new LinkedList<Point>();
         }
     }
 }

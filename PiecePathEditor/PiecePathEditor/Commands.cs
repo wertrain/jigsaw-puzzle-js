@@ -34,7 +34,7 @@ namespace PiecePathEditor
     /// <summary>
     /// ポイント移動コマンド
     /// </summary>
-    public class CommandMovePoint :CommandBase
+    public class CommandMovePoint : CommandBase
     {
         /// <summary>
         /// 
@@ -56,5 +56,21 @@ namespace PiecePathEditor
             Point = point;
             MovedPoint = moved;
         }
+    }
+
+    /// <summary>
+    /// ポイント削除コマンド
+    /// </summary>
+    public class CommandRemovePoint : CommandBase
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point Point;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CommandRemovePoint(Point point) => Point = point;
     }
 }
