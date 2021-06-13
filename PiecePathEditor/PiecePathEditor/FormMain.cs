@@ -73,10 +73,7 @@ namespace PiecePathEditor
                 }
                 else
                 {
-                    int x = e.X - CurrentPoint.X;
-                    int y = e.Y - CurrentPoint.Y;
-                    MoveStartPoint = new Point(x, y);
-
+                    MoveStartPoint = new Point(CurrentPoint.X, CurrentPoint.Y);
                     Sequence = PointSequence.Move;
                 }
             }
@@ -104,7 +101,7 @@ namespace PiecePathEditor
                     break;
 
                 case PointSequence.Move:
-                    _commandManager.MovePoint(MoveStartPoint, CurrentPoint.X, CurrentPoint.Y);
+                    _commandManager.MovePoint(MoveStartPoint, CurrentPoint);
                     MoveStartPoint = CurrentPoint = null;
                     UpdateAll();
                     break;
@@ -194,6 +191,42 @@ namespace PiecePathEditor
                 }
             }
             canvas.Image = bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemUndo_Click(object sender, EventArgs e)
+        {
+            if (_commandManager.UndoCommand())
+            {
+                UpdateAll();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemRedo_Click(object sender, EventArgs e)
+        {
+            if (_commandManager.RedoCommand())
+            {
+                UpdateAll();
+            }
         }
 
         /// <summary>

@@ -38,6 +38,10 @@
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanelOutput = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.toolStripMenuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemUndo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRedo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -63,7 +67,8 @@
             // menuStripMain
             // 
             this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemFile});
+            this.toolStripMenuItemFile,
+            this.toolStripMenuItemEdit});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
             this.menuStripMain.Size = new System.Drawing.Size(615, 24);
@@ -73,7 +78,8 @@
             // toolStripMenuItemFile
             // 
             this.toolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemOpenImage});
+            this.toolStripMenuItemOpenImage,
+            this.toolStripMenuItemExit});
             this.toolStripMenuItemFile.Name = "toolStripMenuItemFile";
             this.toolStripMenuItemFile.Size = new System.Drawing.Size(51, 20);
             this.toolStripMenuItemFile.Text = "File(&F)";
@@ -81,7 +87,7 @@
             // toolStripMenuItemOpenImage
             // 
             this.toolStripMenuItemOpenImage.Name = "toolStripMenuItemOpenImage";
-            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemOpenImage.Text = "Open Image(&O)";
             // 
             // listViewPoints
@@ -106,7 +112,7 @@
             // columnHeaderPoint
             // 
             this.columnHeaderPoint.Text = "Point";
-            this.columnHeaderPoint.Width = 56;
+            this.columnHeaderPoint.Width = 90;
             // 
             // splitContainerMain
             // 
@@ -149,6 +155,38 @@
             this.textBox1.Size = new System.Drawing.Size(223, 198);
             this.textBox1.TabIndex = 2;
             // 
+            // toolStripMenuItemEdit
+            // 
+            this.toolStripMenuItemEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemUndo,
+            this.toolStripMenuItemRedo});
+            this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
+            this.toolStripMenuItemEdit.Size = new System.Drawing.Size(53, 20);
+            this.toolStripMenuItemEdit.Text = "Edit(&E)";
+            // 
+            // toolStripMenuItemUndo
+            // 
+            this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
+            this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.toolStripMenuItemUndo.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemUndo.Text = "Undo(&U)";
+            this.toolStripMenuItemUndo.Click += new System.EventHandler(this.toolStripMenuItemUndo_Click);
+            // 
+            // toolStripMenuItemRedo
+            // 
+            this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
+            this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
+            this.toolStripMenuItemRedo.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemRedo.Text = "Redo(&R)";
+            this.toolStripMenuItemRedo.Click += new System.EventHandler(this.toolStripMenuItemRedo_Click);
+            // 
+            // toolStripMenuItemExit
+            // 
+            this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
+            this.toolStripMenuItemExit.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemExit.Text = "Exit(&E)";
+            this.toolStripMenuItemExit.Click += new System.EventHandler(this.toolStripMenuItemExit_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -184,6 +222,10 @@
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelOutput;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdit;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUndo;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
     }
 }
 

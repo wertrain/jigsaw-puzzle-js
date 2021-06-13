@@ -71,6 +71,15 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        public CommandRemovePoint(Point point) => Point = point;
+        public Point PrevPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CommandRemovePoint(Point point, Point prevPoint)
+        {
+            Point = point;
+            PrevPoint = prevPoint;
+        }
     }
 }

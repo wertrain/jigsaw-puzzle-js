@@ -41,7 +41,12 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        public Queue<CommandBase> CommandQueue;
+        public Stack<CommandBase> CommandStack;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Stack<CommandBase> CommandHistoryStack;
 
         /// <summary>
         /// 
@@ -64,8 +69,10 @@ namespace PiecePathEditor
         /// <param name="point"></param>
         public void AddPoint(Point point)
         {
-            CommandQueue.Enqueue(new CommandAddPoint(point));
+            CommandStack.Push(new CommandAddPoint(point));
             Points.AddLast(point);
+
+            CommandHistoryStack.Clear();
         }
 
         /// <summary>
@@ -73,17 +80,16 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void MovePoint(Point point, int x, int y)
+        public void MovePoint(Point startPoint, Point point)
         {
             var find = Points.Find(point);
             if (find != null)
             {
                 var findPoint = find.Value;
-                CommandQueue.Enqueue(new CommandMovePoint(new Point(findPoint.X, findPoint.Y), new Point(x, y)));
-
-                findPoint.X = x;
-                findPoint.Y = y;
+                CommandStack.Push(new CommandMovePoint(startPoint, point));
             }
+
+            CommandHistoryStack.Clear();
         }
 
         /// <summary>
@@ -92,10 +98,70 @@ namespace PiecePathEditor
         /// <param name="point"></param>
         public void RemovePoint(Point point)
         {
-            if (Points.Remove(point))
+            var find = Points.Find(point);
+            if (find != null)
             {
-                CommandQueue.Enqueue(new CommandRemovePoint(point));
+                CommandStack.Push(new CommandRemovePoint(find.Value, find.Previous.Value));
+                Points.Remove(point);
             }
+
+            CommandHistoryStack.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool UndoCommand()
+        {
+            if (CommandStack.Count == 0) return false;
+
+            var history = CommandStack.Pop();
+            switch(history)
+            {
+                case CommandAddPoint command:
+                    Points.Remove(command.Point);
+                    break;
+
+                case CommandRemovePoint command:
+                    var prev = Points.Find(command.PrevPoint);
+                    Points.AddAfter(prev, command.Point);
+                    break;
+
+                case CommandMovePoint command:
+                    var find = Points.Find(command.MovedPoint);
+                    if (find != null)
+                    {
+                        var findPoint = find.Value;
+                        findPoint.X = command.Point.X;
+                        findPoint.Y = command.Point.Y;
+                    }
+                    break;
+            }
+
+            CommandHistoryStack.Push(history);
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool RedoCommand()
+        {
+            if (CommandHistoryStack.Count == 0) return false;
+
+            var history = CommandHistoryStack.Pop();
+            switch (history)
+            {
+                case CommandAddPoint command:
+                    Points.AddLast(command.Point);
+                    break;
+
+            }
+
+            CommandStack.Push(history);
+
+            return true;
         }
 
         /// <summary>
@@ -103,7 +169,8 @@ namespace PiecePathEditor
         /// </summary>
         public CommandManager()
         {
-            CommandQueue = new Queue<CommandBase>();
+            CommandStack = new Stack<CommandBase>();
+            CommandHistoryStack = new Stack<CommandBase>();
             Points = new LinkedList<Point>();
         }
     }
