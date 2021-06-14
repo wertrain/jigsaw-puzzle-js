@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenCvSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,6 +44,8 @@ namespace PiecePathEditor
             InitializeComponent();
 
             _commandManager = new CommandManager();
+
+            CanvasScaling = trackBarCanvasScaling.Value = 1;
         }
 
         /// <summary>
@@ -54,8 +57,11 @@ namespace PiecePathEditor
         {
             foreach (var point in _commandManager.Points)
             {
-                int x = e.X - point.X;
-                int y = e.Y - point.Y;
+                var scalingPoint = new Point(point, CanvasScaling);
+
+                int x = e.X - scalingPoint.X;
+                int y = e.Y - scalingPoint.Y;
+
                 double r = Math.Sqrt(x * x + y * y);
 
                 if (r <= PointRadius)
@@ -83,6 +89,8 @@ namespace PiecePathEditor
                 {
                     Sequence = PointSequence.Remove;
                 }
+
+                UpdateAll();
             }
         }
 
@@ -96,7 +104,7 @@ namespace PiecePathEditor
             switch (Sequence)
             {
                 case PointSequence.Add:
-                    _commandManager.AddPoint(e.X, e.Y);
+                    _commandManager.AddPoint((int)(e.X / CanvasScaling), (int)(e.Y / CanvasScaling));
                     UpdateAll();
                     break;
 
@@ -152,11 +160,14 @@ namespace PiecePathEditor
             listViewPoints.Items.Clear();
             foreach (var point in _commandManager.Points)
             {
-                var item = new ListViewItem();
-                item.Text = "Point";
-
-                var subItem = new ListViewItem.ListViewSubItem();
-                subItem.Text = $"({point.X},{point.Y})";
+                var item = new ListViewItem
+                {
+                    Text = "Point"
+                };
+                var subItem = new ListViewItem.ListViewSubItem
+                {
+                    Text = $"({point.X},{point.Y})"
+                };
                 item.SubItems.Add(subItem);
 
                 listViewPoints.Items.Add(item);
@@ -181,11 +192,13 @@ namespace PiecePathEditor
                 Point prevPoint = null;
                 foreach (var point in _commandManager.Points)
                 {
-                    g.FillEllipse(blackBrush, new Rectangle(point.X - PointRadius, point.Y - PointRadius, PointRadius * 2, PointRadius * 2));
+                    var scalingPoint = new Point(point, CanvasScaling);
+                    g.FillEllipse(blackBrush, new Rectangle(scalingPoint.X - PointRadius, scalingPoint.Y - PointRadius, PointRadius * 2, PointRadius * 2));
 
                     if (prevPoint != null)
                     {
-                        g.DrawLine(Pens.Black, prevPoint.X, prevPoint.Y, point.X, point.Y);
+                        var scalingPrevPoint = new Point(prevPoint, CanvasScaling);
+                        g.DrawLine(Pens.Black, scalingPrevPoint.X, scalingPrevPoint.Y, scalingPoint.X, scalingPoint.Y);
                     }
                     prevPoint = point;
                 }
@@ -232,7 +245,117 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemOpenImage_Click(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemAutoContour_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FormImageContour())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    _commandManager.Clear();
+
+                    CvPoint[] contour = new CvPoint[dialog.Vertices - 1];
+                    {
+                        var src = new IplImage(dialog.FileName, LoadMode.GrayScale);
+                        var dst = new IplImage(src.Size, BitDepth.U8, 3);
+
+                        CvPoint center = new CvPoint(src.Width / 2, src.Height / 2);
+                        for (int i = 0; i < contour.Length; i++)
+                        {
+                            contour[i].X = (int)(center.X * Math.Cos(2 * Math.PI * i / contour.Length) + center.X);
+                            contour[i].Y = (int)(center.Y * Math.Sin(2 * Math.PI * i / contour.Length) + center.Y);
+                        }
+
+                        for (int i = 0; i < dialog.Loops; ++i)
+                        {
+                            src.SnakeImage(contour, dialog.Alpha, dialog.Beta, dialog.Gammma, new CvSize(15, 15), new CvTermCriteria(1), true);
+                        }
+                    }
+
+                    foreach (var point in contour)
+                    {
+                        _commandManager.AddPoint(new Point(point.X, point.Y));
+                    }
+
+                    var first = contour.First();
+                    _commandManager.AddPoint(new Point(first.X, first.Y));
+
+                    UpdateAll();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trackBarCanvasScaling_Scroll(object sender, EventArgs e)
+        {
+            var trackBar = (TrackBar)sender;
+
+            CanvasScaling = 1.0f + trackBar.Value * 0.2f;
+            UpdateCanvas();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private Bitmap OpenImage()
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image File(*.bmp,*.jpg,*.png,*.tif)|*.bmp;*.jpg;*.png;*.tif|Bitmap(*.bmp)|*.bmp|Jpeg(*.jpg)|*.jpg|PNG(*.png)|*.png";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    using (var fs = new System.IO.FileStream(ofd.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                    {
+                        return new Bitmap(fs);
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="image"></param>
+        private void UpdateCanvas(Image image)
+        {
+            var canvas = pictureBoxCanvas;
+            canvas.Image?.Dispose();
+
+            var bitmap = new Bitmap(canvas.Width, canvas.Height);
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.Clear(Color.White);
+                g.DrawImage(image, new PointF(canvas.Width * 0.5f - image.Width * 0.5f, canvas.Height * 0.5f - image.Height * 0.5f));
+            }
+            canvas.Image = bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly int PointRadius = 5;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private float CanvasScaling { get; set; }
 
         /// <summary>
         /// 

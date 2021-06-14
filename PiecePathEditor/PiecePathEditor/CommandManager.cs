@@ -31,6 +31,28 @@ namespace PiecePathEditor
             X = x;
             Y = y;
         }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="scale"></param>
+        public Point(Point point, float scale)
+        {
+            X = (int)(point.X * scale);
+            Y = (int)(point.Y * scale);
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="scale"></param>
+        public Point(int x, int y, float scale)
+        {
+            X = (int)(x * scale);
+            Y = (int)(y * scale);
+        }
     }
 
     /// <summary>
@@ -162,6 +184,16 @@ namespace PiecePathEditor
             CommandStack.Push(history);
 
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Clear()
+        {
+            CommandStack.Clear();
+            CommandHistoryStack.Clear();
+            Points.Clear();
         }
 
         /// <summary>
