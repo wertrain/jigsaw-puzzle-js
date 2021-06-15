@@ -32,23 +32,23 @@
             this.groupBoxFile = new System.Windows.Forms.GroupBox();
             this.buttonOpenFile = new System.Windows.Forms.Button();
             this.groupBoxParameters = new System.Windows.Forms.GroupBox();
+            this.labelGamma = new System.Windows.Forms.Label();
+            this.numericUpDownGamma = new System.Windows.Forms.NumericUpDown();
+            this.labelBeta = new System.Windows.Forms.Label();
+            this.numericUpDownBeta = new System.Windows.Forms.NumericUpDown();
+            this.labelAlpha = new System.Windows.Forms.Label();
+            this.numericUpDownAlpha = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownLoops = new System.Windows.Forms.NumericUpDown();
             this.labelLoops = new System.Windows.Forms.Label();
             this.buttonExecute = new System.Windows.Forms.Button();
-            this.labelAlpha = new System.Windows.Forms.Label();
-            this.numericUpDownAlpha = new System.Windows.Forms.NumericUpDown();
-            this.labelBeta = new System.Windows.Forms.Label();
-            this.numericUpDownBeta = new System.Windows.Forms.NumericUpDown();
-            this.labelGamma = new System.Windows.Forms.Label();
-            this.numericUpDownGamma = new System.Windows.Forms.NumericUpDown();
             this.labelVertices = new System.Windows.Forms.Label();
             this.numericUpDownVertices = new System.Windows.Forms.NumericUpDown();
             this.groupBoxFile.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLoops)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeta)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGamma)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeta)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLoops)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVertices)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,7 +64,7 @@
             // 
             this.groupBoxFile.Controls.Add(this.buttonOpenFile);
             this.groupBoxFile.Controls.Add(this.textBoxOpenFile);
-            this.groupBoxFile.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxFile.Location = new System.Drawing.Point(12, 10);
             this.groupBoxFile.Name = "groupBoxFile";
             this.groupBoxFile.Size = new System.Drawing.Size(446, 54);
             this.groupBoxFile.TabIndex = 1;
@@ -89,118 +89,12 @@
             this.groupBoxParameters.Controls.Add(this.numericUpDownBeta);
             this.groupBoxParameters.Controls.Add(this.labelAlpha);
             this.groupBoxParameters.Controls.Add(this.numericUpDownAlpha);
-            this.groupBoxParameters.Location = new System.Drawing.Point(12, 71);
+            this.groupBoxParameters.Location = new System.Drawing.Point(12, 69);
             this.groupBoxParameters.Name = "groupBoxParameters";
             this.groupBoxParameters.Size = new System.Drawing.Size(446, 58);
             this.groupBoxParameters.TabIndex = 2;
             this.groupBoxParameters.TabStop = false;
             this.groupBoxParameters.Text = "Parameters";
-            // 
-            // numericUpDownLoops
-            // 
-            this.numericUpDownLoops.Location = new System.Drawing.Point(268, 143);
-            this.numericUpDownLoops.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownLoops.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownLoops.Name = "numericUpDownLoops";
-            this.numericUpDownLoops.Size = new System.Drawing.Size(51, 19);
-            this.numericUpDownLoops.TabIndex = 0;
-            this.numericUpDownLoops.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // labelLoops
-            // 
-            this.labelLoops.AutoSize = true;
-            this.labelLoops.Location = new System.Drawing.Point(229, 146);
-            this.labelLoops.Name = "labelLoops";
-            this.labelLoops.Size = new System.Drawing.Size(35, 12);
-            this.labelLoops.TabIndex = 1;
-            this.labelLoops.Text = "Loops";
-            // 
-            // buttonExecute
-            // 
-            this.buttonExecute.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonExecute.Location = new System.Drawing.Point(334, 140);
-            this.buttonExecute.Name = "buttonExecute";
-            this.buttonExecute.Size = new System.Drawing.Size(124, 23);
-            this.buttonExecute.TabIndex = 3;
-            this.buttonExecute.Text = "Execute(&E)";
-            this.buttonExecute.UseVisualStyleBackColor = true;
-            this.buttonExecute.Click += new System.EventHandler(this.buttonExecute_Click);
-            // 
-            // labelAlpha
-            // 
-            this.labelAlpha.AutoSize = true;
-            this.labelAlpha.Location = new System.Drawing.Point(17, 26);
-            this.labelAlpha.Name = "labelAlpha";
-            this.labelAlpha.Size = new System.Drawing.Size(34, 12);
-            this.labelAlpha.TabIndex = 3;
-            this.labelAlpha.Text = "Alpha";
-            // 
-            // numericUpDownAlpha
-            // 
-            this.numericUpDownAlpha.DecimalPlaces = 2;
-            this.numericUpDownAlpha.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownAlpha.Location = new System.Drawing.Point(58, 23);
-            this.numericUpDownAlpha.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownAlpha.Name = "numericUpDownAlpha";
-            this.numericUpDownAlpha.Size = new System.Drawing.Size(80, 19);
-            this.numericUpDownAlpha.TabIndex = 2;
-            this.numericUpDownAlpha.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            // 
-            // labelBeta
-            // 
-            this.labelBeta.AutoSize = true;
-            this.labelBeta.Location = new System.Drawing.Point(156, 26);
-            this.labelBeta.Name = "labelBeta";
-            this.labelBeta.Size = new System.Drawing.Size(29, 12);
-            this.labelBeta.TabIndex = 5;
-            this.labelBeta.Text = "Beta";
-            // 
-            // numericUpDownBeta
-            // 
-            this.numericUpDownBeta.DecimalPlaces = 2;
-            this.numericUpDownBeta.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownBeta.Location = new System.Drawing.Point(192, 23);
-            this.numericUpDownBeta.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownBeta.Name = "numericUpDownBeta";
-            this.numericUpDownBeta.Size = new System.Drawing.Size(80, 19);
-            this.numericUpDownBeta.TabIndex = 4;
-            this.numericUpDownBeta.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
             // 
             // labelGamma
             // 
@@ -234,10 +128,116 @@
             0,
             131072});
             // 
+            // labelBeta
+            // 
+            this.labelBeta.AutoSize = true;
+            this.labelBeta.Location = new System.Drawing.Point(156, 26);
+            this.labelBeta.Name = "labelBeta";
+            this.labelBeta.Size = new System.Drawing.Size(29, 12);
+            this.labelBeta.TabIndex = 5;
+            this.labelBeta.Text = "Beta";
+            // 
+            // numericUpDownBeta
+            // 
+            this.numericUpDownBeta.DecimalPlaces = 2;
+            this.numericUpDownBeta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownBeta.Location = new System.Drawing.Point(192, 23);
+            this.numericUpDownBeta.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownBeta.Name = "numericUpDownBeta";
+            this.numericUpDownBeta.Size = new System.Drawing.Size(80, 19);
+            this.numericUpDownBeta.TabIndex = 4;
+            this.numericUpDownBeta.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            // 
+            // labelAlpha
+            // 
+            this.labelAlpha.AutoSize = true;
+            this.labelAlpha.Location = new System.Drawing.Point(17, 26);
+            this.labelAlpha.Name = "labelAlpha";
+            this.labelAlpha.Size = new System.Drawing.Size(34, 12);
+            this.labelAlpha.TabIndex = 3;
+            this.labelAlpha.Text = "Alpha";
+            // 
+            // numericUpDownAlpha
+            // 
+            this.numericUpDownAlpha.DecimalPlaces = 2;
+            this.numericUpDownAlpha.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownAlpha.Location = new System.Drawing.Point(58, 23);
+            this.numericUpDownAlpha.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownAlpha.Name = "numericUpDownAlpha";
+            this.numericUpDownAlpha.Size = new System.Drawing.Size(80, 19);
+            this.numericUpDownAlpha.TabIndex = 2;
+            this.numericUpDownAlpha.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // numericUpDownLoops
+            // 
+            this.numericUpDownLoops.Location = new System.Drawing.Point(268, 140);
+            this.numericUpDownLoops.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownLoops.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownLoops.Name = "numericUpDownLoops";
+            this.numericUpDownLoops.Size = new System.Drawing.Size(51, 19);
+            this.numericUpDownLoops.TabIndex = 0;
+            this.numericUpDownLoops.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // labelLoops
+            // 
+            this.labelLoops.AutoSize = true;
+            this.labelLoops.Location = new System.Drawing.Point(229, 143);
+            this.labelLoops.Name = "labelLoops";
+            this.labelLoops.Size = new System.Drawing.Size(35, 12);
+            this.labelLoops.TabIndex = 1;
+            this.labelLoops.Text = "Loops";
+            // 
+            // buttonExecute
+            // 
+            this.buttonExecute.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonExecute.Location = new System.Drawing.Point(334, 137);
+            this.buttonExecute.Name = "buttonExecute";
+            this.buttonExecute.Size = new System.Drawing.Size(124, 23);
+            this.buttonExecute.TabIndex = 3;
+            this.buttonExecute.Text = "Execute(&E)";
+            this.buttonExecute.UseVisualStyleBackColor = true;
+            this.buttonExecute.Click += new System.EventHandler(this.buttonExecute_Click);
+            // 
             // labelVertices
             // 
             this.labelVertices.AutoSize = true;
-            this.labelVertices.Location = new System.Drawing.Point(111, 146);
+            this.labelVertices.Location = new System.Drawing.Point(111, 143);
             this.labelVertices.Name = "labelVertices";
             this.labelVertices.Size = new System.Drawing.Size(48, 12);
             this.labelVertices.TabIndex = 5;
@@ -245,7 +245,7 @@
             // 
             // numericUpDownVertices
             // 
-            this.numericUpDownVertices.Location = new System.Drawing.Point(164, 143);
+            this.numericUpDownVertices.Location = new System.Drawing.Point(164, 140);
             this.numericUpDownVertices.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -284,10 +284,10 @@
             this.groupBoxFile.PerformLayout();
             this.groupBoxParameters.ResumeLayout(false);
             this.groupBoxParameters.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLoops)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeta)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGamma)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeta)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLoops)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVertices)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
