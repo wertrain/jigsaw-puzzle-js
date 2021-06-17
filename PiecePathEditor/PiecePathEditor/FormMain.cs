@@ -264,11 +264,30 @@ namespace PiecePathEditor
                 {
                     _commandManager.Clear();
 
+                    CvWindow w = new CvWindow();
                     CvPoint[] contour = new CvPoint[dialog.Vertices - 1];
                     {
-                        var src = new IplImage(dialog.FileName, LoadMode.GrayScale);
-                        var dst = new IplImage(src.Size, BitDepth.U8, 3);
+                        var baseData = new IplImage(dialog.FileName, LoadMode.GrayScale);
 
+                        var src = new IplImage(baseData.Size.Width * 2, baseData.Size.Height * 2, baseData.Depth, baseData.NChannels);
+
+
+                        src.FillPoly(new CvPoint[][] {
+                            new CvPoint[]
+                            {
+                                new CvPoint(0, 0),
+                                new CvPoint(100, 0),
+                            },
+                            new CvPoint[]
+                            {
+                                new CvPoint(0, 100),
+                                new CvPoint(100, 100),
+                            }
+                        }, OpenCvSharp.CPlusPlus.Scalar.White);
+
+                        src.DrawImage(baseData.Size.Width / 2, baseData.Size.Height / 2, baseData.Size.Width, baseData.Size.Height, baseData);
+                        var dst = new IplImage(src.Size, BitDepth.U8, 3);
+                        w.Image = src;
                         CvPoint center = new CvPoint(src.Width / 2, src.Height / 2);
                         for (int i = 0; i < contour.Length; i++)
                         {
