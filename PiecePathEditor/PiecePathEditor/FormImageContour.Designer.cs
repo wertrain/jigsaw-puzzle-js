@@ -260,7 +260,7 @@
             this.numericUpDownVertices.Size = new System.Drawing.Size(51, 19);
             this.numericUpDownVertices.TabIndex = 4;
             this.numericUpDownVertices.Value = new decimal(new int[] {
-            64,
+            48,
             0,
             0,
             0});

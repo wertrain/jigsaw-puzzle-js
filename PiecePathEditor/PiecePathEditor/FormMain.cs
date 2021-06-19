@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using OpenCvSharp.CPlusPlus;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -134,8 +135,8 @@ namespace PiecePathEditor
             switch (Sequence)
             {
                 case PointSequence.Move:
-                    CurrentPoint.X = e.X;
-                    CurrentPoint.Y = e.Y;
+                    CurrentPoint.X = (int)(e.X / CanvasScaling);
+                    CurrentPoint.Y = (int)(e.Y / CanvasScaling);
                     UpdateCanvas();
                     break;
             }
@@ -187,6 +188,15 @@ namespace PiecePathEditor
             var bitmap = new Bitmap(canvas.Width, canvas.Height);
             using (Graphics g = Graphics.FromImage(bitmap))
             {
+                if (_currentOpendImage != null)
+                {
+                    g.DrawImage(_currentOpendImage, 
+                        _currentOpendImage.Width / 2 * CanvasScaling, 
+                        _currentOpendImage.Height / 2 * CanvasScaling, 
+                        _currentOpendImage.Width * CanvasScaling, 
+                        _currentOpendImage.Height * CanvasScaling);
+                }
+
                 var blackBrush = new SolidBrush(Color.Black);
 
                 Point prevPoint = null;
@@ -264,30 +274,25 @@ namespace PiecePathEditor
                 {
                     _commandManager.Clear();
 
-                    CvWindow w = new CvWindow();
                     CvPoint[] contour = new CvPoint[dialog.Vertices - 1];
                     {
                         var baseData = new IplImage(dialog.FileName, LoadMode.GrayScale);
+                        var outputSize = Math.Max(baseData.Width, baseData.Height) * 2;
 
-                        var src = new IplImage(baseData.Size.Width * 2, baseData.Size.Height * 2, baseData.Depth, baseData.NChannels);
+                        Mat output = new Mat(new OpenCvSharp.CPlusPlus.Size(outputSize, outputSize), MatType.CV_8U, new Scalar(1));
 
+                        var ListOfListOfPoint = new List<OpenCvSharp.CPlusPlus.Point[]>();
+                        var points = new List<OpenCvSharp.CPlusPlus.Point>();
+                        points.Add(new OpenCvSharp.CPlusPlus.Point(0, 0));
+                        points.Add(new OpenCvSharp.CPlusPlus.Point(0, output.Height));
+                        points.Add(new OpenCvSharp.CPlusPlus.Point(output.Width, output.Height));
+                        points.Add(new OpenCvSharp.CPlusPlus.Point(output.Width, 0));
+                        ListOfListOfPoint.Add(points.ToArray());
+                        output.FillPoly(ListOfListOfPoint.ToArray(), Scalar.White);
 
-                        src.FillPoly(new CvPoint[][] {
-                            new CvPoint[]
-                            {
-                                new CvPoint(0, 0),
-                                new CvPoint(100, 0),
-                            },
-                            new CvPoint[]
-                            {
-                                new CvPoint(0, 100),
-                                new CvPoint(100, 100),
-                            }
-                        }, OpenCvSharp.CPlusPlus.Scalar.White);
-
+                        var src = output.ToIplImage();
                         src.DrawImage(baseData.Size.Width / 2, baseData.Size.Height / 2, baseData.Size.Width, baseData.Size.Height, baseData);
-                        var dst = new IplImage(src.Size, BitDepth.U8, 3);
-                        w.Image = src;
+
                         CvPoint center = new CvPoint(src.Width / 2, src.Height / 2);
                         for (int i = 0; i < contour.Length; i++)
                         {
@@ -295,12 +300,24 @@ namespace PiecePathEditor
                             contour[i].Y = (int)(center.Y * Math.Sin(2 * Math.PI * i / contour.Length) + center.Y);
                         }
 
-                        for (int i = 0; i < dialog.Loops; ++i)
+                        for (int i = 0; i < dialog.Loops * 100; ++i)
                         {
-                            src.SnakeImage(contour, dialog.Alpha, dialog.Beta, dialog.Gammma, new CvSize(15, 15), new CvTermCriteria(1), true);
+                            src.SnakeImage(contour, dialog.Alpha, dialog.Beta, dialog.Gammma, new CvSize(15, 15), new CvTermCriteria(1), false);
+
+#if false
+                            IplImage dst = new IplImage(src.Size, BitDepth.U8, 3);
+                            src.CvtColor(dst, ColorConversion.GrayToRgb);
+
+                            for (int j = 0; j < contour.Length - 1; j++)
+                            {
+                                dst.Line(contour[j], contour[j + 1], new CvColor(255, 0, 0), 2);
+                            }
+                            dst.Line(contour[contour.Length - 1], contour[0], new CvColor(255, 0, 0), 2);
+                            w.Image = dst;
+                            int key = CvWindow.WaitKey();
+#endif
                         }
                     }
-
                     foreach (var point in contour)
                     {
                         _commandManager.AddPoint(new Point(point.X, point.Y));
@@ -308,6 +325,8 @@ namespace PiecePathEditor
 
                     var first = contour.First();
                     _commandManager.AddPoint(new Point(first.X, first.Y));
+
+                    _currentOpendImage = Bitmap.FromFile(dialog.FileName);
 
                     UpdateAll();
                 }
@@ -385,6 +404,11 @@ namespace PiecePathEditor
         /// 
         /// </summary>
         private CommandManager _commandManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Image _currentOpendImage;
 
         /// <summary>
         /// 
