@@ -197,18 +197,19 @@ namespace PiecePathEditor
                         _currentOpendImage.Height * CanvasScaling);
                 }
 
-                var blackBrush = new SolidBrush(Color.Black);
+                var brush = new SolidBrush(buttonSelectColor.BackColor);
+                var pen = new Pen(buttonSelectColor.BackColor);
 
                 Point prevPoint = null;
                 foreach (var point in _commandManager.Points)
                 {
                     var scalingPoint = new Point(point, CanvasScaling);
-                    g.FillEllipse(blackBrush, new Rectangle(scalingPoint.X - PointRadius, scalingPoint.Y - PointRadius, PointRadius * 2, PointRadius * 2));
+                    g.FillEllipse(brush, new Rectangle(scalingPoint.X - PointRadius, scalingPoint.Y - PointRadius, PointRadius * 2, PointRadius * 2));
 
                     if (prevPoint != null)
                     {
                         var scalingPrevPoint = new Point(prevPoint, CanvasScaling);
-                        g.DrawLine(Pens.Black, scalingPrevPoint.X, scalingPrevPoint.Y, scalingPoint.X, scalingPoint.Y);
+                        g.DrawLine(pen, scalingPrevPoint.X, scalingPrevPoint.Y, scalingPoint.X, scalingPoint.Y);
                     }
                     prevPoint = point;
                 }
@@ -259,6 +260,8 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void toolStripMenuItemOpenImage_Click(object sender, EventArgs e)
         {
+            _currentOpendImage = OpenImage();
+            UpdateCanvas();
         }
 
         /// <summary>
@@ -349,6 +352,22 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonSelectColor_Click(object sender, EventArgs e)
+        {
+            using(var cd = new ColorDialog())
+            {
+                if (cd.ShowDialog() == DialogResult.OK)
+                {
+                    buttonSelectColor.BackColor = cd.Color;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         private Bitmap OpenImage()
         {
@@ -419,5 +438,6 @@ namespace PiecePathEditor
         /// 
         /// </summary>
         private Point MoveStartPoint;
+
     }
 }

@@ -47,6 +47,8 @@
             this.trackBarCanvasScaling = new System.Windows.Forms.TrackBar();
             this.tableLayoutPanelOutput = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanelCanvasUI = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonSelectColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -56,6 +58,7 @@
             this.tableLayoutPanelCanvas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).BeginInit();
             this.tableLayoutPanelOutput.SuspendLayout();
+            this.tableLayoutPanelCanvasUI.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxCanvas
@@ -197,7 +200,7 @@
             this.tableLayoutPanelCanvas.ColumnCount = 1;
             this.tableLayoutPanelCanvas.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelCanvas.Controls.Add(this.pictureBoxCanvas, 0, 0);
-            this.tableLayoutPanelCanvas.Controls.Add(this.trackBarCanvasScaling, 0, 1);
+            this.tableLayoutPanelCanvas.Controls.Add(this.tableLayoutPanelCanvasUI, 0, 1);
             this.tableLayoutPanelCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelCanvas.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelCanvas.Name = "tableLayoutPanelCanvas";
@@ -209,11 +212,10 @@
             // 
             // trackBarCanvasScaling
             // 
-            this.trackBarCanvasScaling.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 406);
+            this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 3);
             this.trackBarCanvasScaling.Minimum = 1;
             this.trackBarCanvasScaling.Name = "trackBarCanvasScaling";
-            this.trackBarCanvasScaling.Size = new System.Drawing.Size(444, 31);
+            this.trackBarCanvasScaling.Size = new System.Drawing.Size(407, 25);
             this.trackBarCanvasScaling.TabIndex = 1;
             this.trackBarCanvasScaling.TabStop = false;
             this.trackBarCanvasScaling.Value = 1;
@@ -243,6 +245,31 @@
             this.textBox1.Size = new System.Drawing.Size(265, 210);
             this.textBox1.TabIndex = 2;
             // 
+            // tableLayoutPanelCanvasUI
+            // 
+            this.tableLayoutPanelCanvasUI.ColumnCount = 2;
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.24324F));
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.756757F));
+            this.tableLayoutPanelCanvasUI.Controls.Add(this.trackBarCanvasScaling, 0, 0);
+            this.tableLayoutPanelCanvasUI.Controls.Add(this.buttonSelectColor, 1, 0);
+            this.tableLayoutPanelCanvasUI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelCanvasUI.Location = new System.Drawing.Point(3, 406);
+            this.tableLayoutPanelCanvasUI.Name = "tableLayoutPanelCanvasUI";
+            this.tableLayoutPanelCanvasUI.RowCount = 1;
+            this.tableLayoutPanelCanvasUI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelCanvasUI.Size = new System.Drawing.Size(444, 31);
+            this.tableLayoutPanelCanvasUI.TabIndex = 2;
+            // 
+            // buttonSelectColor
+            // 
+            this.buttonSelectColor.BackColor = System.Drawing.Color.Black;
+            this.buttonSelectColor.Location = new System.Drawing.Point(416, 3);
+            this.buttonSelectColor.Name = "buttonSelectColor";
+            this.buttonSelectColor.Size = new System.Drawing.Size(24, 23);
+            this.buttonSelectColor.TabIndex = 2;
+            this.buttonSelectColor.UseVisualStyleBackColor = false;
+            this.buttonSelectColor.Click += new System.EventHandler(this.buttonSelectColor_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -261,10 +288,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
             this.tableLayoutPanelCanvas.ResumeLayout(false);
-            this.tableLayoutPanelCanvas.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).EndInit();
             this.tableLayoutPanelOutput.ResumeLayout(false);
             this.tableLayoutPanelOutput.PerformLayout();
+            this.tableLayoutPanelCanvasUI.ResumeLayout(false);
+            this.tableLayoutPanelCanvasUI.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -290,6 +318,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFilesCommands;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCanvas;
         private System.Windows.Forms.TrackBar trackBarCanvasScaling;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCanvasUI;
+        private System.Windows.Forms.Button buttonSelectColor;
     }
 }
 
