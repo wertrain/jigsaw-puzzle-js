@@ -222,6 +222,54 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Contour File(*.ctr)|*.ctr";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    var contourFile = FileManager.Instance.LoadFile(ofd.FileName);
+                    if (contourFile == null) return;
+
+                    _commandManager.Clear();
+                    _currentOpendImage = contourFile.ModelImage;
+                    foreach (var point in contourFile.Points)
+                    {
+                        _commandManager.AddPoint(new Point(point.X, point.Y));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var sfd = new SaveFileDialog())
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    var contourFile = new FileManager.ContourFile();
+                    contourFile.ModelImage = new Bitmap(_currentOpendImage);
+                    foreach (var point in _commandManager.Points)
+                    {
+                        contourFile.Points.Add(new Point(point.X, point.Y));
+                    }
+                    FileManager.Instance.SaveFile(contourFile, sfd.FileName);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void toolStripMenuItemExit_Click(object sender, EventArgs e)
         {
             Close();
@@ -438,6 +486,5 @@ namespace PiecePathEditor
         /// 
         /// </summary>
         private Point MoveStartPoint;
-
     }
 }

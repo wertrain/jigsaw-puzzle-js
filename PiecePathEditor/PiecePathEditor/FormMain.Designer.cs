@@ -44,11 +44,13 @@
             this.columnHeaderPoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanelCanvas = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelCanvasUI = new System.Windows.Forms.TableLayoutPanel();
             this.trackBarCanvasScaling = new System.Windows.Forms.TrackBar();
+            this.buttonSelectColor = new System.Windows.Forms.Button();
             this.tableLayoutPanelOutput = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanelCanvasUI = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonSelectColor = new System.Windows.Forms.Button();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -56,9 +58,9 @@
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
             this.tableLayoutPanelCanvas.SuspendLayout();
+            this.tableLayoutPanelCanvasUI.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).BeginInit();
             this.tableLayoutPanelOutput.SuspendLayout();
-            this.tableLayoutPanelCanvasUI.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxCanvas
@@ -88,6 +90,8 @@
             // toolStripMenuItemFile
             // 
             this.toolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
             this.toolStripMenuItemOpenImage,
             this.toolStripSeparatorFilesCommands,
             this.toolStripMenuItemExit});
@@ -98,19 +102,19 @@
             // toolStripMenuItemOpenImage
             // 
             this.toolStripMenuItemOpenImage.Name = "toolStripMenuItemOpenImage";
-            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemOpenImage.Text = "Open Image(&O)";
             this.toolStripMenuItemOpenImage.Click += new System.EventHandler(this.toolStripMenuItemOpenImage_Click);
             // 
             // toolStripSeparatorFilesCommands
             // 
             this.toolStripSeparatorFilesCommands.Name = "toolStripSeparatorFilesCommands";
-            this.toolStripSeparatorFilesCommands.Size = new System.Drawing.Size(152, 6);
+            this.toolStripSeparatorFilesCommands.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItemExit
             // 
             this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
-            this.toolStripMenuItemExit.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemExit.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemExit.Text = "Exit(&E)";
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.toolStripMenuItemExit_Click);
             // 
@@ -210,6 +214,21 @@
             this.tableLayoutPanelCanvas.Size = new System.Drawing.Size(450, 440);
             this.tableLayoutPanelCanvas.TabIndex = 1;
             // 
+            // tableLayoutPanelCanvasUI
+            // 
+            this.tableLayoutPanelCanvasUI.ColumnCount = 2;
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.24324F));
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.756757F));
+            this.tableLayoutPanelCanvasUI.Controls.Add(this.trackBarCanvasScaling, 0, 0);
+            this.tableLayoutPanelCanvasUI.Controls.Add(this.buttonSelectColor, 1, 0);
+            this.tableLayoutPanelCanvasUI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelCanvasUI.Location = new System.Drawing.Point(3, 406);
+            this.tableLayoutPanelCanvasUI.Name = "tableLayoutPanelCanvasUI";
+            this.tableLayoutPanelCanvasUI.RowCount = 1;
+            this.tableLayoutPanelCanvasUI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelCanvasUI.Size = new System.Drawing.Size(444, 31);
+            this.tableLayoutPanelCanvasUI.TabIndex = 2;
+            // 
             // trackBarCanvasScaling
             // 
             this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 3);
@@ -220,6 +239,16 @@
             this.trackBarCanvasScaling.TabStop = false;
             this.trackBarCanvasScaling.Value = 1;
             this.trackBarCanvasScaling.Scroll += new System.EventHandler(this.trackBarCanvasScaling_Scroll);
+            // 
+            // buttonSelectColor
+            // 
+            this.buttonSelectColor.BackColor = System.Drawing.Color.Black;
+            this.buttonSelectColor.Location = new System.Drawing.Point(416, 3);
+            this.buttonSelectColor.Name = "buttonSelectColor";
+            this.buttonSelectColor.Size = new System.Drawing.Size(24, 23);
+            this.buttonSelectColor.TabIndex = 2;
+            this.buttonSelectColor.UseVisualStyleBackColor = false;
+            this.buttonSelectColor.Click += new System.EventHandler(this.buttonSelectColor_Click);
             // 
             // tableLayoutPanelOutput
             // 
@@ -245,30 +274,19 @@
             this.textBox1.Size = new System.Drawing.Size(265, 210);
             this.textBox1.TabIndex = 2;
             // 
-            // tableLayoutPanelCanvasUI
+            // saveAsToolStripMenuItem
             // 
-            this.tableLayoutPanelCanvasUI.ColumnCount = 2;
-            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.24324F));
-            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.756757F));
-            this.tableLayoutPanelCanvasUI.Controls.Add(this.trackBarCanvasScaling, 0, 0);
-            this.tableLayoutPanelCanvasUI.Controls.Add(this.buttonSelectColor, 1, 0);
-            this.tableLayoutPanelCanvasUI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelCanvasUI.Location = new System.Drawing.Point(3, 406);
-            this.tableLayoutPanelCanvasUI.Name = "tableLayoutPanelCanvasUI";
-            this.tableLayoutPanelCanvasUI.RowCount = 1;
-            this.tableLayoutPanelCanvasUI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanelCanvasUI.Size = new System.Drawing.Size(444, 31);
-            this.tableLayoutPanelCanvasUI.TabIndex = 2;
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as(&A)";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
-            // buttonSelectColor
+            // openToolStripMenuItem
             // 
-            this.buttonSelectColor.BackColor = System.Drawing.Color.Black;
-            this.buttonSelectColor.Location = new System.Drawing.Point(416, 3);
-            this.buttonSelectColor.Name = "buttonSelectColor";
-            this.buttonSelectColor.Size = new System.Drawing.Size(24, 23);
-            this.buttonSelectColor.TabIndex = 2;
-            this.buttonSelectColor.UseVisualStyleBackColor = false;
-            this.buttonSelectColor.Click += new System.EventHandler(this.buttonSelectColor_Click);
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Text = "Open(&O)";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -288,11 +306,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
             this.tableLayoutPanelCanvas.ResumeLayout(false);
+            this.tableLayoutPanelCanvasUI.ResumeLayout(false);
+            this.tableLayoutPanelCanvasUI.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).EndInit();
             this.tableLayoutPanelOutput.ResumeLayout(false);
             this.tableLayoutPanelOutput.PerformLayout();
-            this.tableLayoutPanelCanvasUI.ResumeLayout(false);
-            this.tableLayoutPanelCanvasUI.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -320,6 +338,8 @@
         private System.Windows.Forms.TrackBar trackBarCanvasScaling;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCanvasUI;
         private System.Windows.Forms.Button buttonSelectColor;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }
 

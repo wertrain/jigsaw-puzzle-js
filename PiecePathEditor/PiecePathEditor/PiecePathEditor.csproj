@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="FormImageContour.cs">
       <SubType>Form</SubType>
     </Compile>
