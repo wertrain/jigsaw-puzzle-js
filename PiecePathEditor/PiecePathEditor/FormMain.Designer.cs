@@ -51,6 +51,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorEdits = new System.Windows.Forms.ToolStripSeparator();
+            this.clearLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -69,7 +71,7 @@
             this.pictureBoxCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxCanvas.Location = new System.Drawing.Point(3, 3);
             this.pictureBoxCanvas.Name = "pictureBoxCanvas";
-            this.pictureBoxCanvas.Size = new System.Drawing.Size(444, 397);
+            this.pictureBoxCanvas.Size = new System.Drawing.Size(444, 399);
             this.pictureBoxCanvas.TabIndex = 0;
             this.pictureBoxCanvas.TabStop = false;
             this.pictureBoxCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxCanvas_MouseDown);
@@ -124,6 +126,8 @@
             this.toolStripMenuItemUndo,
             this.toolStripMenuItemRedo,
             this.toolStripSeparatorEditCommands,
+            this.clearLToolStripMenuItem,
+            this.toolStripSeparatorEdits,
             this.toolStripMenuItemAutoContour});
             this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
             this.toolStripMenuItemEdit.Size = new System.Drawing.Size(53, 20);
@@ -133,7 +137,7 @@
             // 
             this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
             this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.toolStripMenuItemUndo.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemUndo.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemUndo.Text = "Undo(&U)";
             this.toolStripMenuItemUndo.Click += new System.EventHandler(this.toolStripMenuItemUndo_Click);
             // 
@@ -141,19 +145,19 @@
             // 
             this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
             this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.toolStripMenuItemRedo.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemRedo.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemRedo.Text = "Redo(&R)";
             this.toolStripMenuItemRedo.Click += new System.EventHandler(this.toolStripMenuItemRedo_Click);
             // 
             // toolStripSeparatorEditCommands
             // 
             this.toolStripSeparatorEditCommands.Name = "toolStripSeparatorEditCommands";
-            this.toolStripSeparatorEditCommands.Size = new System.Drawing.Size(158, 6);
+            this.toolStripSeparatorEditCommands.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItemAutoContour
             // 
             this.toolStripMenuItemAutoContour.Name = "toolStripMenuItemAutoContour";
-            this.toolStripMenuItemAutoContour.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemAutoContour.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemAutoContour.Text = "Auto Contour(&K)";
             this.toolStripMenuItemAutoContour.Click += new System.EventHandler(this.toolStripMenuItemAutoContour_Click);
             // 
@@ -202,39 +206,40 @@
             // tableLayoutPanelCanvas
             // 
             this.tableLayoutPanelCanvas.ColumnCount = 1;
-            this.tableLayoutPanelCanvas.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelCanvas.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelCanvas.Controls.Add(this.pictureBoxCanvas, 0, 0);
             this.tableLayoutPanelCanvas.Controls.Add(this.tableLayoutPanelCanvasUI, 0, 1);
             this.tableLayoutPanelCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelCanvas.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelCanvas.Name = "tableLayoutPanelCanvas";
             this.tableLayoutPanelCanvas.RowCount = 2;
-            this.tableLayoutPanelCanvas.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.80723F));
-            this.tableLayoutPanelCanvas.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.192771F));
+            this.tableLayoutPanelCanvas.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelCanvas.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanelCanvas.Size = new System.Drawing.Size(450, 440);
             this.tableLayoutPanelCanvas.TabIndex = 1;
             // 
             // tableLayoutPanelCanvasUI
             // 
             this.tableLayoutPanelCanvasUI.ColumnCount = 2;
-            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.24324F));
-            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.756757F));
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelCanvasUI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanelCanvasUI.Controls.Add(this.trackBarCanvasScaling, 0, 0);
             this.tableLayoutPanelCanvasUI.Controls.Add(this.buttonSelectColor, 1, 0);
             this.tableLayoutPanelCanvasUI.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelCanvasUI.Location = new System.Drawing.Point(3, 406);
+            this.tableLayoutPanelCanvasUI.Location = new System.Drawing.Point(3, 408);
             this.tableLayoutPanelCanvasUI.Name = "tableLayoutPanelCanvasUI";
             this.tableLayoutPanelCanvasUI.RowCount = 1;
-            this.tableLayoutPanelCanvasUI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanelCanvasUI.Size = new System.Drawing.Size(444, 31);
+            this.tableLayoutPanelCanvasUI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelCanvasUI.Size = new System.Drawing.Size(444, 29);
             this.tableLayoutPanelCanvasUI.TabIndex = 2;
             // 
             // trackBarCanvasScaling
             // 
+            this.trackBarCanvasScaling.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 3);
             this.trackBarCanvasScaling.Minimum = 1;
             this.trackBarCanvasScaling.Name = "trackBarCanvasScaling";
-            this.trackBarCanvasScaling.Size = new System.Drawing.Size(407, 25);
+            this.trackBarCanvasScaling.Size = new System.Drawing.Size(408, 23);
             this.trackBarCanvasScaling.TabIndex = 1;
             this.trackBarCanvasScaling.TabStop = false;
             this.trackBarCanvasScaling.Value = 1;
@@ -243,7 +248,8 @@
             // buttonSelectColor
             // 
             this.buttonSelectColor.BackColor = System.Drawing.Color.Black;
-            this.buttonSelectColor.Location = new System.Drawing.Point(416, 3);
+            this.buttonSelectColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonSelectColor.Location = new System.Drawing.Point(417, 3);
             this.buttonSelectColor.Name = "buttonSelectColor";
             this.buttonSelectColor.Size = new System.Drawing.Size(24, 23);
             this.buttonSelectColor.TabIndex = 2;
@@ -287,6 +293,18 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open(&O)";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorEdits
+            // 
+            this.toolStripSeparatorEdits.Name = "toolStripSeparatorEdits";
+            this.toolStripSeparatorEdits.Size = new System.Drawing.Size(177, 6);
+            // 
+            // clearLToolStripMenuItem
+            // 
+            this.clearLToolStripMenuItem.Name = "clearLToolStripMenuItem";
+            this.clearLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearLToolStripMenuItem.Text = "Clear(&L)";
+            this.clearLToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -340,6 +358,8 @@
         private System.Windows.Forms.Button buttonSelectColor;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEdits;
     }
 }
 

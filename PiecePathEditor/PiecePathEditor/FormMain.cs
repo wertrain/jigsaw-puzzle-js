@@ -239,6 +239,7 @@ namespace PiecePathEditor
                     {
                         _commandManager.AddPoint(new Point(point.X, point.Y));
                     }
+                    UpdateAll();
                 }
             }
         }
@@ -252,10 +253,12 @@ namespace PiecePathEditor
         {
             using (var sfd = new SaveFileDialog())
             {
+                sfd.Filter = "Contour File(*.ctr)|*.ctr";
+
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     var contourFile = new FileManager.ContourFile();
-                    contourFile.ModelImage = new Bitmap(_currentOpendImage);
+                    contourFile.ModelImage = _currentOpendImage == null ? null : new Bitmap(_currentOpendImage);
                     foreach (var point in _commandManager.Points)
                     {
                         contourFile.Points.Add(new Point(point.X, point.Y));
@@ -299,6 +302,17 @@ namespace PiecePathEditor
             {
                 UpdateAll();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _commandManager.Clear();
+            UpdateAll();
         }
 
         /// <summary>

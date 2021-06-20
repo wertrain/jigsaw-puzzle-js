@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,15 @@ namespace PiecePathEditor
             /// 
             /// </summary>
             public List<Point> Points { get; set; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public ContourFile()
+            {
+                ModelImage = null;
+                Points = new List<Point>();
+            }
         }
 
         /// <summary>
@@ -41,10 +51,10 @@ namespace PiecePathEditor
         {
             try
             {
-                using (var xmlWriter = XmlWriter.Create(fileName))
+                using (var sw = new StreamWriter(fileName, false))
                 {
                     var xmlSerializer = new XmlSerializer(typeof(ContourFile));
-                    xmlSerializer.Serialize(xmlWriter, file);
+                    xmlSerializer.Serialize(sw, file);
                 }
             }
             catch (Exception)
@@ -61,10 +71,11 @@ namespace PiecePathEditor
         /// <returns></returns>
         public ContourFile LoadFile(string fileName)
         {
-            using (var xmlReader = XmlReader.Create(fileName))
+            using (var sr = new StreamReader(fileName))
+            using (var xr = XmlReader.Create(sr))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ContourFile));
-                return xmlSerializer.Deserialize(xmlReader) as ContourFile;
+                var xmlSerializer = new XmlSerializer(typeof(ContourFile));
+                return xmlSerializer.Deserialize(xr) as ContourFile;
             }
         }
 

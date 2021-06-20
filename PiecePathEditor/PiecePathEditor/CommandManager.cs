@@ -22,6 +22,14 @@ namespace PiecePathEditor
         public int Y { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Point()
+        {
+            X = Y = 0;
+        }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="x"></param>
