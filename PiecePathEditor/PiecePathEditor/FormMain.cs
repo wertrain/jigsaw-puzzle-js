@@ -47,7 +47,7 @@ namespace PiecePathEditor
             _commandManager = new CommandManager();
 
             CanvasScaling = trackBarCanvasScaling.Value = 1;
-            buttonSelectColor.BackColor = DefaultBackColor;
+            buttonSelectColor.BackColor = DefaultPenColor;
         }
 
         /// <summary>
