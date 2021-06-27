@@ -32,6 +32,23 @@ namespace PiecePathEditor
     }
 
     /// <summary>
+    /// ポイント挿入コマンド
+    /// </summary>
+    public class CommandInsertPoint : CommandBase
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point Point { get; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="point"></param>
+        public CommandInsertPoint(Point point) => Point = point;
+    }
+
+    /// <summary>
     /// ポイント移動コマンド
     /// </summary>
     public class CommandMovePoint : CommandBase

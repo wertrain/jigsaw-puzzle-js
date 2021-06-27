@@ -110,6 +110,31 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        public void InsertPoint(int index, int x, int y)
+        {
+            InsertPoint(index, new Point(x, y));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        public void InsertPoint(int index, Point point)
+        {
+            CommandStack.Push(new CommandInsertPoint(point));
+
+            var points = Points.ToList();
+            points.Insert(index + 1, point);
+            Points = new LinkedList<Point>(points);
+
+            CommandHistoryStack.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void MovePoint(Point startPoint, Point point)
         {
             var find = Points.Find(point);

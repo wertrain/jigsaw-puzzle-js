@@ -35,6 +35,11 @@ namespace PiecePathEditor
             /// 
             /// </summary>
             Remove,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            Insert,
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace PiecePathEditor
             {
                 if (CurrentPoint == null)
                 {
-                    Sequence = PointSequence.Add;
+                    Sequence = listViewPoints.SelectedItems.Count == 0 ? PointSequence.Add : PointSequence.Insert;
                 }
                 else
                 {
@@ -107,6 +112,12 @@ namespace PiecePathEditor
             {
                 case PointSequence.Add:
                     _commandManager.AddPoint((int)(e.X / CanvasScaling), (int)(e.Y / CanvasScaling));
+                    UpdateAll();
+                    break;
+
+                case PointSequence.Insert:
+                    var index = listViewPoints.SelectedIndices[0];
+                    _commandManager.InsertPoint(index, (int)(e.X / CanvasScaling), (int)(e.Y / CanvasScaling));
                     UpdateAll();
                     break;
 
