@@ -42,10 +42,19 @@ namespace PiecePathEditor
         public Point Point { get; }
 
         /// <summary>
+        /// 挿入インデックス
+        /// </summary>
+        public int Index { get; }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="point"></param>
-        public CommandInsertPoint(Point point) => Point = point;
+        public CommandInsertPoint(Point point, int index)
+        {
+            Point = point;
+            Index = index;
+        }
     }
 
     /// <summary>

@@ -121,7 +121,7 @@ namespace PiecePathEditor
         /// <param name="point"></param>
         public void InsertPoint(int index, Point point)
         {
-            CommandStack.Push(new CommandInsertPoint(point));
+            CommandStack.Push(new CommandInsertPoint(point, index));
 
             var points = Points.ToList();
             points.Insert(index + 1, point);
@@ -191,6 +191,10 @@ namespace PiecePathEditor
                         findPoint.Y = command.Point.Y;
                     }
                     break;
+
+                case CommandInsertPoint command:
+                    Points.Remove(command.Point);
+                    break;
             }
 
             CommandHistoryStack.Push(history);
@@ -212,6 +216,11 @@ namespace PiecePathEditor
                     Points.AddLast(command.Point);
                     break;
 
+                case CommandInsertPoint command:
+                    var points = Points.ToList();
+                    points.Insert(command.Index + 1, command.Point);
+                    Points = new LinkedList<Point>(points);
+                    break;
             }
 
             CommandStack.Push(history);
