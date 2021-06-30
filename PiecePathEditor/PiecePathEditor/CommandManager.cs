@@ -221,6 +221,12 @@ namespace PiecePathEditor
                     points.Insert(command.Index + 1, command.Point);
                     Points = new LinkedList<Point>(points);
                     break;
+
+                case CommandMovePoint command:
+                    var point = Points.Find(command.MovedPoint);
+                    point.Value.X = command.Point.X;
+                    point.Value.Y = command.Point.Y;
+                    break;
             }
 
             CommandStack.Push(history);
