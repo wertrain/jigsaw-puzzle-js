@@ -161,6 +161,7 @@ namespace PiecePathEditor
         {
             UpdateListView();
             UpdateCanvas();
+            UpdateCode();
         }
 
         /// <summary>
@@ -227,6 +228,31 @@ namespace PiecePathEditor
                 }
             }
             canvas.Image = bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateCode()
+        {
+            var builder = new StringBuilder();
+
+            var first = _commandManager.Points.FirstOrDefault();
+            builder.Append($"context.moveTo({first.X}, {first.Y});");
+            builder.Append(Environment.NewLine);
+
+            var pointList = _commandManager.Points.ToList();
+            for (int index = 1; index < pointList.Count; ++index)
+            {
+                var point = pointList[index];
+                builder.Append($"context.lineTo({point.X}, {point.Y});");
+                builder.Append(Environment.NewLine);
+            }
+
+            //builder.Append($"context.lineTo({first.X}, {first.Y});");
+            //builder.Append(Environment.NewLine);
+
+            textBoxCode.Text = builder.ToString();
         }
 
         /// <summary>
