@@ -235,9 +235,10 @@ namespace PiecePathEditor
         /// </summary>
         private void UpdateCode()
         {
-            var builder = new StringBuilder();
-
             var first = _commandManager.Points.FirstOrDefault();
+            if (first == null) return;
+
+            var builder = new StringBuilder();
             builder.Append($"context.moveTo({first.X}, {first.Y});");
             builder.Append(Environment.NewLine);
 
