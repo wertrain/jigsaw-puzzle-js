@@ -32,6 +32,7 @@
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemOpenImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFilesCommands = new System.Windows.Forms.ToolStripSeparator();
@@ -53,6 +54,11 @@
             this.buttonSelectColor = new System.Windows.Forms.Button();
             this.tableLayoutPanelOutput = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxCode = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanelCodeStyle = new System.Windows.Forms.FlowLayoutPanel();
+            this.radioButtonCodeStyleClass = new System.Windows.Forms.RadioButton();
+            this.radioButtonCodeStyleArray = new System.Windows.Forms.RadioButton();
+            this.radioButtonCodeStyleJsPath = new System.Windows.Forms.RadioButton();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanvas)).BeginInit();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -63,6 +69,7 @@
             this.tableLayoutPanelCanvasUI.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).BeginInit();
             this.tableLayoutPanelOutput.SuspendLayout();
+            this.flowLayoutPanelCodeStyle.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxCanvas
@@ -92,7 +99,9 @@
             // toolStripMenuItemFile
             // 
             this.toolStripMenuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripMenuItemOpenImage,
             this.toolStripSeparatorFilesCommands,
@@ -100,37 +109,45 @@
             this.toolStripMenuItemFile.Name = "toolStripMenuItemFile";
             this.toolStripMenuItemFile.Size = new System.Drawing.Size(51, 20);
             this.toolStripMenuItemFile.Text = "File(&F)";
+            this.toolStripMenuItemFile.DropDownOpening += new System.EventHandler(this.toolStripMenuItemFile_DropDownOpening);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open(&O)";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Save(&S)";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save as(&A)";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripMenuItemOpenImage
             // 
             this.toolStripMenuItemOpenImage.Name = "toolStripMenuItemOpenImage";
-            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemOpenImage.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemOpenImage.Text = "Open Image(&O)";
             this.toolStripMenuItemOpenImage.Click += new System.EventHandler(this.toolStripMenuItemOpenImage_Click);
             // 
             // toolStripSeparatorFilesCommands
             // 
             this.toolStripSeparatorFilesCommands.Name = "toolStripSeparatorFilesCommands";
-            this.toolStripSeparatorFilesCommands.Size = new System.Drawing.Size(152, 6);
+            this.toolStripSeparatorFilesCommands.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItemExit
             // 
             this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
-            this.toolStripMenuItemExit.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemExit.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemExit.Text = "Exit(&E)";
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.toolStripMenuItemExit_Click);
             // 
@@ -193,13 +210,15 @@
             this.columnHeaderName,
             this.columnHeaderPoint});
             this.listViewPoints.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewPoints.FullRowSelect = true;
             this.listViewPoints.HideSelection = false;
             this.listViewPoints.Location = new System.Drawing.Point(3, 3);
             this.listViewPoints.Name = "listViewPoints";
-            this.listViewPoints.Size = new System.Drawing.Size(265, 218);
+            this.listViewPoints.Size = new System.Drawing.Size(265, 204);
             this.listViewPoints.TabIndex = 0;
             this.listViewPoints.UseCompatibleStateImageBehavior = false;
             this.listViewPoints.View = System.Windows.Forms.View.Details;
+            this.listViewPoints.SelectedIndexChanged += new System.EventHandler(this.listViewPoints_SelectedIndexChanged);
             // 
             // columnHeaderName
             // 
@@ -263,6 +282,7 @@
             // 
             this.trackBarCanvasScaling.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 3);
+            this.trackBarCanvasScaling.Maximum = 15;
             this.trackBarCanvasScaling.Minimum = 1;
             this.trackBarCanvasScaling.Name = "trackBarCanvasScaling";
             this.trackBarCanvasScaling.Size = new System.Drawing.Size(408, 23);
@@ -285,27 +305,84 @@
             // tableLayoutPanelOutput
             // 
             this.tableLayoutPanelOutput.ColumnCount = 1;
-            this.tableLayoutPanelOutput.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelOutput.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelOutput.Controls.Add(this.listViewPoints, 0, 0);
             this.tableLayoutPanelOutput.Controls.Add(this.textBoxCode, 0, 1);
+            this.tableLayoutPanelOutput.Controls.Add(this.flowLayoutPanelCodeStyle, 0, 2);
             this.tableLayoutPanelOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelOutput.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelOutput.Name = "tableLayoutPanelOutput";
-            this.tableLayoutPanelOutput.RowCount = 2;
+            this.tableLayoutPanelOutput.RowCount = 3;
             this.tableLayoutPanelOutput.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.98592F));
             this.tableLayoutPanelOutput.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.01408F));
+            this.tableLayoutPanelOutput.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
             this.tableLayoutPanelOutput.Size = new System.Drawing.Size(271, 440);
             this.tableLayoutPanelOutput.TabIndex = 2;
             // 
             // textBoxCode
             // 
             this.textBoxCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxCode.Location = new System.Drawing.Point(3, 227);
+            this.textBoxCode.Location = new System.Drawing.Point(3, 213);
             this.textBoxCode.Multiline = true;
             this.textBoxCode.Name = "textBoxCode";
             this.textBoxCode.ReadOnly = true;
-            this.textBoxCode.Size = new System.Drawing.Size(265, 210);
+            this.textBoxCode.Size = new System.Drawing.Size(265, 196);
             this.textBoxCode.TabIndex = 2;
+            // 
+            // flowLayoutPanelCodeStyle
+            // 
+            this.flowLayoutPanelCodeStyle.Controls.Add(this.radioButtonCodeStyleClass);
+            this.flowLayoutPanelCodeStyle.Controls.Add(this.radioButtonCodeStyleArray);
+            this.flowLayoutPanelCodeStyle.Controls.Add(this.radioButtonCodeStyleJsPath);
+            this.flowLayoutPanelCodeStyle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanelCodeStyle.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanelCodeStyle.Location = new System.Drawing.Point(3, 415);
+            this.flowLayoutPanelCodeStyle.Name = "flowLayoutPanelCodeStyle";
+            this.flowLayoutPanelCodeStyle.Size = new System.Drawing.Size(265, 22);
+            this.flowLayoutPanelCodeStyle.TabIndex = 3;
+            // 
+            // radioButtonCodeStyleClass
+            // 
+            this.radioButtonCodeStyleClass.AutoSize = true;
+            this.radioButtonCodeStyleClass.Location = new System.Drawing.Point(210, 3);
+            this.radioButtonCodeStyleClass.Name = "radioButtonCodeStyleClass";
+            this.radioButtonCodeStyleClass.Size = new System.Drawing.Size(52, 16);
+            this.radioButtonCodeStyleClass.TabIndex = 2;
+            this.radioButtonCodeStyleClass.TabStop = true;
+            this.radioButtonCodeStyleClass.Text = "Class";
+            this.radioButtonCodeStyleClass.UseVisualStyleBackColor = true;
+            this.radioButtonCodeStyleClass.CheckedChanged += new System.EventHandler(this.radioButtonCodeStyleRadioButton_CheckedChanged);
+            // 
+            // radioButtonCodeStyleArray
+            // 
+            this.radioButtonCodeStyleArray.AutoSize = true;
+            this.radioButtonCodeStyleArray.Location = new System.Drawing.Point(153, 3);
+            this.radioButtonCodeStyleArray.Name = "radioButtonCodeStyleArray";
+            this.radioButtonCodeStyleArray.Size = new System.Drawing.Size(51, 16);
+            this.radioButtonCodeStyleArray.TabIndex = 1;
+            this.radioButtonCodeStyleArray.Text = "Array";
+            this.radioButtonCodeStyleArray.UseVisualStyleBackColor = true;
+            this.radioButtonCodeStyleArray.CheckedChanged += new System.EventHandler(this.radioButtonCodeStyleRadioButton_CheckedChanged);
+            // 
+            // radioButtonCodeStyleJsPath
+            // 
+            this.radioButtonCodeStyleJsPath.AutoSize = true;
+            this.radioButtonCodeStyleJsPath.Checked = true;
+            this.radioButtonCodeStyleJsPath.Location = new System.Drawing.Point(42, 3);
+            this.radioButtonCodeStyleJsPath.Name = "radioButtonCodeStyleJsPath";
+            this.radioButtonCodeStyleJsPath.Size = new System.Drawing.Size(105, 16);
+            this.radioButtonCodeStyleJsPath.TabIndex = 0;
+            this.radioButtonCodeStyleJsPath.TabStop = true;
+            this.radioButtonCodeStyleJsPath.Text = "JavaScript Path";
+            this.radioButtonCodeStyleJsPath.UseVisualStyleBackColor = true;
+            this.radioButtonCodeStyleJsPath.CheckedChanged += new System.EventHandler(this.radioButtonCodeStyleRadioButton_CheckedChanged);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Text = "New(&N)";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -330,6 +407,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCanvasScaling)).EndInit();
             this.tableLayoutPanelOutput.ResumeLayout(false);
             this.tableLayoutPanelOutput.PerformLayout();
+            this.flowLayoutPanelCodeStyle.ResumeLayout(false);
+            this.flowLayoutPanelCodeStyle.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -361,6 +440,12 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearLToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEdits;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelCodeStyle;
+        private System.Windows.Forms.RadioButton radioButtonCodeStyleJsPath;
+        private System.Windows.Forms.RadioButton radioButtonCodeStyleArray;
+        private System.Windows.Forms.RadioButton radioButtonCodeStyleClass;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
     }
 }
 

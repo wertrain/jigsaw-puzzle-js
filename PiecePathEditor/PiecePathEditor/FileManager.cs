@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace PiecePathEditor
             /// <summary>
             /// 
             /// </summary>
+            [XmlIgnoreAttribute()]
             public Bitmap ModelImage { get; set; }
 
             /// <summary>
@@ -34,6 +36,38 @@ namespace PiecePathEditor
             {
                 ModelImage = null;
                 Points = new List<Point>();
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            [XmlElementAttribute("ModelImage")]
+            public byte[] PictureByteArray
+            {
+                get
+                {
+                    if (ModelImage != null)
+                    {
+                        TypeConverter BitmapConverter = TypeDescriptor.GetConverter(ModelImage.GetType());
+                        return (byte[])BitmapConverter.ConvertTo(ModelImage, typeof(byte[]));
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                set
+                {
+                    if (value != null)
+                    {
+                        ModelImage = new Bitmap(new MemoryStream(value));
+                    }
+                    else
+                    {
+                        ModelImage = null;
+                    }
+                }
             }
         }
 

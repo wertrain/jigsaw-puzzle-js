@@ -53,6 +53,8 @@ namespace PiecePathEditor
 
             CanvasScaling = trackBarCanvasScaling.Value = 1;
             buttonSelectColor.BackColor = DefaultPenColor;
+
+            _formDefaultTitle = Text;
         }
 
         /// <summary>
@@ -73,26 +75,26 @@ namespace PiecePathEditor
 
                 if (r <= PointRadius)
                 {
-                    CurrentPoint = point;
+                    _currentPoint = point;
                     break;
                 }
             }
 
             if (e.Button == MouseButtons.Left)
             {
-                if (CurrentPoint == null)
+                if (_currentPoint == null)
                 {
                     Sequence = listViewPoints.SelectedItems.Count == 0 ? PointSequence.Add : PointSequence.Insert;
                 }
                 else
                 {
-                    MoveStartPoint = new Point(CurrentPoint.X, CurrentPoint.Y);
+                    _moveStartPoint = new Point(_currentPoint.X, _currentPoint.Y);
                     Sequence = PointSequence.Move;
                 }
             }
             else if (e.Button == MouseButtons.Right)
             {
-                if (CurrentPoint != null)
+                if (_currentPoint != null)
                 {
                     Sequence = PointSequence.Remove;
                 }
@@ -122,14 +124,14 @@ namespace PiecePathEditor
                     break;
 
                 case PointSequence.Move:
-                    _commandManager.MovePoint(MoveStartPoint, CurrentPoint);
-                    MoveStartPoint = CurrentPoint = null;
+                    _commandManager.MovePoint(_moveStartPoint, _currentPoint);
+                    _moveStartPoint = _currentPoint = null;
                     UpdateAll();
                     break;
 
                 case PointSequence.Remove:
-                    _commandManager.RemovePoint(CurrentPoint);
-                    CurrentPoint = null;
+                    _commandManager.RemovePoint(_currentPoint);
+                    _currentPoint = null;
                     UpdateAll();
                     break;
             }
@@ -147,8 +149,8 @@ namespace PiecePathEditor
             switch (Sequence)
             {
                 case PointSequence.Move:
-                    CurrentPoint.X = (int)(e.X / CanvasScaling);
-                    CurrentPoint.Y = (int)(e.Y / CanvasScaling);
+                    _currentPoint.X = (int)(e.X / CanvasScaling);
+                    _currentPoint.Y = (int)(e.Y / CanvasScaling);
                     UpdateCanvas();
                     break;
             }
@@ -183,6 +185,7 @@ namespace PiecePathEditor
                     Text = $"({point.X},{point.Y})"
                 };
                 item.SubItems.Add(subItem);
+                item.Tag = point;
 
                 listViewPoints.Items.Add(item);
             }
@@ -226,6 +229,13 @@ namespace PiecePathEditor
                     }
                     prevPoint = point;
                 }
+
+                if (_selectedPoint != null)
+                {
+                    var radius = (int)(PointRadius * 1.5);
+                    var scalingPoint = new Point(_selectedPoint, CanvasScaling);
+                    g.FillEllipse(brush, new Rectangle(scalingPoint.X - radius, scalingPoint.Y - radius, radius * 2, radius * 2));
+                }
             }
             canvas.Image = bitmap;
         }
@@ -235,25 +245,60 @@ namespace PiecePathEditor
         /// </summary>
         private void UpdateCode()
         {
+            textBoxCode.Text = string.Empty;
+
             var first = _commandManager.Points.FirstOrDefault();
             if (first == null) return;
 
             var builder = new StringBuilder();
-            builder.Append($"context.moveTo({first.X}, {first.Y});");
-            builder.Append(Environment.NewLine);
 
-            var pointList = _commandManager.Points.ToList();
-            for (int index = 1; index < pointList.Count; ++index)
+            if (radioButtonCodeStyleJsPath.Checked)
             {
-                var point = pointList[index];
-                builder.Append($"context.lineTo({point.X}, {point.Y});");
+                builder.Append($"context.moveTo({first.X}, {first.Y});");
                 builder.Append(Environment.NewLine);
+
+                var pointList = _commandManager.Points.ToList();
+                for (int index = 1; index < pointList.Count; ++index)
+                {
+                    var point = pointList[index];
+                    builder.Append($"context.lineTo({point.X}, {point.Y});");
+                    builder.Append(Environment.NewLine);
+                }
+                //builder.Append($"context.lineTo({first.X}, {first.Y});");
+                //builder.Append(Environment.NewLine);
+            }
+            else if (radioButtonCodeStyleArray.Checked)
+            {
+                foreach (var point in _commandManager.Points)
+                { 
+                    builder.Append($"[{point.X}, {point.Y}],");
+                    builder.Append(Environment.NewLine);
+                }
+            }
+            else if (radioButtonCodeStyleClass.Checked)
+            {
+                foreach (var point in _commandManager.Points)
+                {
+                    builder.Append($"new Point({point.X}, {point.Y}),");
+                    builder.Append(Environment.NewLine);
+                }
             }
 
-            //builder.Append($"context.lineTo({first.X}, {first.Y});");
-            //builder.Append(Environment.NewLine);
-
             textBoxCode.Text = builder.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentFilePath = null;
+            _currentOpendImage = null;
+            Text = _formDefaultTitle;
+            _commandManager.Clear();
+            UpdateAll();
         }
 
         /// <summary>
@@ -278,9 +323,39 @@ namespace PiecePathEditor
                     {
                         _commandManager.AddPoint(new Point(point.X, point.Y));
                     }
+                    _currentFilePath = ofd.FileName;
+
+                    Text = $"{_formDefaultTitle} - {System.IO.Path.GetFileName(_currentFilePath)}";
+
                     UpdateAll();
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var contourFile = new FileManager.ContourFile();
+            contourFile.ModelImage = _currentOpendImage == null ? null : new Bitmap(_currentOpendImage);
+            foreach (var point in _commandManager.Points)
+            {
+                contourFile.Points.Add(new Point(point.X, point.Y));
+            }
+            FileManager.Instance.SaveFile(contourFile, _currentFilePath);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemFile_DropDownOpening(object sender, EventArgs e)
+        {
+            saveAsToolStripMenuItem.Enabled = string.IsNullOrEmpty(_currentFilePath);
         }
 
         /// <summary>
@@ -442,6 +517,26 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void listViewPoints_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var listView = (ListView)sender;
+
+            _selectedPoint = null;
+
+            if (listView.SelectedItems.Count > 0)
+            {
+                var item = listView.SelectedItems[0];
+                _selectedPoint = (Point)item.Tag;
+            }
+
+            UpdateCanvas();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBarCanvasScaling_Scroll(object sender, EventArgs e)
         {
             var trackBar = (TrackBar)sender;
@@ -464,6 +559,16 @@ namespace PiecePathEditor
                     buttonSelectColor.BackColor = cd.Color;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void radioButtonCodeStyleRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCode();
         }
 
         /// <summary>
@@ -533,16 +638,31 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
+        private string _currentFilePath;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Point _selectedPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Image _currentOpendImage;
 
         /// <summary>
         /// 
         /// </summary>
-        private Point CurrentPoint;
+        private Point _currentPoint;
 
         /// <summary>
         /// 
         /// </summary>
-        private Point MoveStartPoint;
+        private Point _moveStartPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string _formDefaultTitle { get; set; }
     }
 }
