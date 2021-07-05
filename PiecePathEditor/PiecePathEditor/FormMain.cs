@@ -90,6 +90,9 @@ namespace PiecePathEditor
                 {
                     _moveStartPoint = new Point(_currentPoint.X, _currentPoint.Y);
                     Sequence = PointSequence.Move;
+
+                    _selectedPoint = _currentPoint;
+                    UpdateCanvas();
                 }
             }
             else if (e.Button == MouseButtons.Right)
@@ -292,8 +295,9 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemNew_Click(object sender, EventArgs e)
         {
+            _selectedPoint = null;
             _currentFilePath = null;
             _currentOpendImage = null;
             Text = _formDefaultTitle;
@@ -306,7 +310,7 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemOpen_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
             {
@@ -337,7 +341,7 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemSave_Click(object sender, EventArgs e)
         {
             var contourFile = new FileManager.ContourFile();
             contourFile.ModelImage = _currentOpendImage == null ? null : new Bitmap(_currentOpendImage);
@@ -363,7 +367,7 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemSaveAs_Click(object sender, EventArgs e)
         {
             using (var sfd = new SaveFileDialog())
             {
@@ -423,8 +427,9 @@ namespace PiecePathEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemClear_Click(object sender, EventArgs e)
         {
+            _selectedPoint = null;
             _commandManager.Clear();
             UpdateAll();
         }
