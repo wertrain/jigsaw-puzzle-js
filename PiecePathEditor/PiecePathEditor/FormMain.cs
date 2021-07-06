@@ -64,6 +64,12 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void pictureBoxCanvas_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+            {
+                SelectPoint(null);
+                return;
+            }
+
             foreach (var point in _commandManager.Points)
             {
                 var scalingPoint = new Point(point, CanvasScaling);
@@ -91,7 +97,7 @@ namespace PiecePathEditor
                     _moveStartPoint = new Point(_currentPoint.X, _currentPoint.Y);
                     Sequence = PointSequence.Move;
 
-                    _selectedPoint = _currentPoint;
+                    SelectPoint(_currentPoint);
                     UpdateCanvas();
                 }
             }
@@ -189,6 +195,7 @@ namespace PiecePathEditor
                 };
                 item.SubItems.Add(subItem);
                 item.Tag = point;
+                item.Selected = _selectedPoint == point;
 
                 listViewPoints.Items.Add(item);
             }
@@ -297,7 +304,7 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void toolStripMenuItemNew_Click(object sender, EventArgs e)
         {
-            _selectedPoint = null;
+            SelectPoint(null);
             _currentFilePath = null;
             _currentOpendImage = null;
             Text = _formDefaultTitle;
@@ -405,6 +412,7 @@ namespace PiecePathEditor
         {
             if (_commandManager.UndoCommand())
             {
+                SelectPoint(null);
                 UpdateAll();
             }
         }
@@ -418,6 +426,7 @@ namespace PiecePathEditor
         {
             if (_commandManager.RedoCommand())
             {
+                SelectPoint(null);
                 UpdateAll();
             }
         }
@@ -429,7 +438,7 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void toolStripMenuItemClear_Click(object sender, EventArgs e)
         {
-            _selectedPoint = null;
+            SelectPoint(null);
             _commandManager.Clear();
             UpdateAll();
         }
@@ -595,6 +604,26 @@ namespace PiecePathEditor
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        private void SelectPoint(Point point)
+        {
+            _selectedPoint = point;
+
+            listViewPoints.SelectedItems.Clear();
+
+            foreach (ListViewItem item in listViewPoints.Items)
+            {
+               if (item.Tag == point)
+                {
+                    item.Selected = true;
+                    break;
+                }
+            }
         }
 
         /// <summary>
