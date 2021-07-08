@@ -49,12 +49,24 @@ namespace PiecePathEditor
         {
             InitializeComponent();
 
+            MouseWheel += formMain_MouseWheel;
+
             _commandManager = new CommandManager();
 
             CanvasScaling = trackBarCanvasScaling.Value = 1;
             buttonSelectColor.BackColor = DefaultPenColor;
 
             _formDefaultTitle = Text;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void formMain_MouseWheel(object sender, MouseEventArgs e)
+        {
+            trackBarCanvasScaling.Value += Math.Max(1, (int)(trackBarCanvasScaling.Maximum * (e.Delta / 120.0f) / trackBarCanvasScaling.Maximum));
         }
 
         /// <summary>
