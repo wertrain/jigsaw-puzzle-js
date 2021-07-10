@@ -40,6 +40,11 @@ namespace PiecePathEditor
             /// 
             /// </summary>
             Insert,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            Offset,
         }
 
         /// <summary>
@@ -66,7 +71,13 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void formMain_MouseWheel(object sender, MouseEventArgs e)
         {
-            trackBarCanvasScaling.Value += Math.Max(1, (int)(trackBarCanvasScaling.Maximum * (e.Delta / 120.0f) / trackBarCanvasScaling.Maximum));
+            var value = trackBarCanvasScaling.Value;
+
+            value -= (int)((trackBarCanvasScaling.Maximum * (e.Delta / 120.0f)) / trackBarCanvasScaling.Maximum);
+
+            trackBarCanvasScaling.Value = Math.Min(trackBarCanvasScaling.Maximum, Math.Max(trackBarCanvasScaling.Minimum, value));
+
+            trackBarCanvasScaling_Scroll(trackBarCanvasScaling, EventArgs.Empty);
         }
 
         /// <summary>
@@ -76,12 +87,6 @@ namespace PiecePathEditor
         /// <param name="e"></param>
         private void pictureBoxCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                SelectPoint(null);
-                return;
-            }
-
             foreach (var point in _commandManager.Points)
             {
                 var scalingPoint = new Point(point, CanvasScaling);
@@ -115,12 +120,23 @@ namespace PiecePathEditor
             }
             else if (e.Button == MouseButtons.Right)
             {
-                if (_currentPoint != null)
+                if (_currentPoint == null)
+                {
+                    SelectPoint(null); 
+                }
+                else
                 {
                     Sequence = PointSequence.Remove;
                 }
 
                 UpdateAll();
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                Sequence = PointSequence.Offset;
+
+                _offsetStartPoint = new Point(e.X, e.Y);
+                _offsetCurrentPoint = new Point(e.X, e.Y);
             }
         }
 
@@ -155,6 +171,11 @@ namespace PiecePathEditor
                     _currentPoint = null;
                     UpdateAll();
                     break;
+
+                case PointSequence.Offset:
+                    _commandManager.OffsetPoints(new Point(_offsetCurrentPoint.X - _offsetStartPoint.X, _offsetCurrentPoint.Y - _offsetStartPoint.Y));
+                    UpdateAll();
+                    break;
             }
 
             Sequence = PointSequence.None;
@@ -172,6 +193,17 @@ namespace PiecePathEditor
                 case PointSequence.Move:
                     _currentPoint.X = (int)(e.X / CanvasScaling);
                     _currentPoint.Y = (int)(e.Y / CanvasScaling);
+                    UpdateCanvas();
+                    break;
+
+                case PointSequence.Offset:
+                    var offsetPoint = new Point(e.X - _offsetCurrentPoint.X, e.Y - _offsetCurrentPoint.Y);
+                    foreach (var point in _commandManager.Points)
+                    {
+                        point.X = point.X + offsetPoint.X;
+                        point.Y = point.Y + offsetPoint.Y;
+                    }
+                    _offsetCurrentPoint = new Point(e.X, e.Y);
                     UpdateCanvas();
                     break;
             }
@@ -705,6 +737,16 @@ namespace PiecePathEditor
         /// 
         /// </summary>
         private Point _moveStartPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Point _offsetStartPoint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Point _offsetCurrentPoint;
 
         /// <summary>
         /// 

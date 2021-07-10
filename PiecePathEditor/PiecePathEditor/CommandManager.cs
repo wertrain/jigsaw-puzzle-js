@@ -166,6 +166,17 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="point"></param>
+        public void OffsetPoints(Point offsetPoint)
+        {
+            CommandStack.Push(new CommandOffsetPoints(offsetPoint));
+
+            CommandHistoryStack.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool UndoCommand()
         {
             if (CommandStack.Count == 0) return false;
@@ -195,6 +206,14 @@ namespace PiecePathEditor
                 case CommandInsertPoint command:
                     Points.Remove(command.Point);
                     break;
+
+                case CommandOffsetPoints command:
+                    foreach (var point in Points)
+                    {
+                        point.X = point.X - command.Point.X;
+                        point.Y = point.Y - command.Point.Y;
+                    }
+                    break;
             }
 
             CommandHistoryStack.Push(history);
@@ -216,6 +235,14 @@ namespace PiecePathEditor
                     Points.AddLast(command.Point);
                     break;
 
+                case CommandOffsetPoints command:
+                    foreach (var point in Points)
+                    {
+                        point.X = point.X + command.Point.X;
+                        point.Y = point.Y + command.Point.Y;
+                    }
+                    break;
+
                 case CommandInsertPoint command:
                     var points = Points.ToList();
                     points.Insert(command.Index + 1, command.Point);
@@ -223,9 +250,9 @@ namespace PiecePathEditor
                     break;
 
                 case CommandMovePoint command:
-                    var point = Points.Find(command.MovedPoint);
-                    point.Value.X = command.Point.X;
-                    point.Value.Y = command.Point.Y;
+                    var findPoint = Points.Find(command.MovedPoint);
+                    findPoint.Value.X = command.Point.X;
+                    findPoint.Value.Y = command.Point.Y;
                     break;
             }
 

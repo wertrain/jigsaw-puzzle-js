@@ -289,7 +289,7 @@
             // 
             this.trackBarCanvasScaling.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trackBarCanvasScaling.Location = new System.Drawing.Point(3, 3);
-            this.trackBarCanvasScaling.Maximum = 15;
+            this.trackBarCanvasScaling.Maximum = 20;
             this.trackBarCanvasScaling.Minimum = 1;
             this.trackBarCanvasScaling.Name = "trackBarCanvasScaling";
             this.trackBarCanvasScaling.Size = new System.Drawing.Size(408, 23);

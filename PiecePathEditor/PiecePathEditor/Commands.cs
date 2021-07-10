@@ -108,4 +108,21 @@ namespace PiecePathEditor
             PrevPoint = prevPoint;
         }
     }
+
+    /// <summary>
+    /// ポイント全移動コマンド
+    /// </summary>
+    public class CommandOffsetPoints : CommandBase
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point Point { get; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="point"></param>
+        public CommandOffsetPoints(Point point) => Point = point;
+    }
 }
