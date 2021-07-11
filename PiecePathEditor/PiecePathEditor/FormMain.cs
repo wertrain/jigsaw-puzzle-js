@@ -135,8 +135,9 @@ namespace PiecePathEditor
             {
                 Sequence = PointSequence.Offset;
 
-                _offsetStartPoint = new Point(e.X, e.Y);
-                _offsetCurrentPoint = new Point(e.X, e.Y);
+                var mousePoint = new Point((int)(e.X / CanvasScaling), (int)(e.Y / CanvasScaling));
+                _offsetStartPoint = new Point(mousePoint.X, mousePoint.Y);
+                _offsetCurrentPoint = new Point(mousePoint.X, mousePoint.Y);
             }
         }
 
@@ -197,13 +198,14 @@ namespace PiecePathEditor
                     break;
 
                 case PointSequence.Offset:
-                    var offsetPoint = new Point(e.X - _offsetCurrentPoint.X, e.Y - _offsetCurrentPoint.Y);
+                    var mousePoint = new Point((int)(e.X / CanvasScaling), (int)(e.Y / CanvasScaling));
+                    var offsetPoint = new Point(mousePoint.X - _offsetCurrentPoint.X, mousePoint.Y - _offsetCurrentPoint.Y);
                     foreach (var point in _commandManager.Points)
                     {
                         point.X = point.X + offsetPoint.X;
                         point.Y = point.Y + offsetPoint.Y;
                     }
-                    _offsetCurrentPoint = new Point(e.X, e.Y);
+                    _offsetCurrentPoint = mousePoint;
                     UpdateCanvas();
                     break;
             }
@@ -599,7 +601,7 @@ namespace PiecePathEditor
         {
             var trackBar = (TrackBar)sender;
 
-            CanvasScaling = 1.0f + trackBar.Value * 0.2f;
+            CanvasScaling = 0.8f + (trackBar.Value * 0.2f);
             UpdateCanvas();
         }
 
