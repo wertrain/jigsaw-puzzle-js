@@ -169,6 +169,7 @@ namespace PiecePathEditor
 
                 case PointSequence.Remove:
                     _commandManager.RemovePoint(_currentPoint);
+                    if (_currentPoint == _selectedPoint) _selectedPoint = null;
                     _currentPoint = null;
                     UpdateAll();
                     break;
