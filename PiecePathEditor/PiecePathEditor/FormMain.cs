@@ -754,6 +754,6 @@ namespace PiecePathEditor
         /// <summary>
         /// 
         /// </summary>
-        private string _formDefaultTitle { get; set; }
+        private string _formDefaultTitle;
     }
 }
