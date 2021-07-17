@@ -40,9 +40,15 @@
       let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
       loaded.then(function(imageList) {
         canvas = JigsawPuzzle.Common.run(function(context) {
-          let p = JigsawPuzzle.Core.createPieces(imageList[0], 5, 5);
+          let p = JigsawPuzzle.Core.createPieces(imageList[0]);
           p.then(function(pieces){
-            context.drawImage(pieces[4], 0, 0);
+            //context.drawImage(pieces[0], 0, 0);
+            for (let y = 0; y < 6; ++y) {
+              for (let x = 0; x < 10; ++x) {
+                let index = (y * 10) + x;
+                context.drawImage(pieces[index], 80 * x, 110 * y);
+              }
+            }
           });
         });
         canvas.addEventListener('click', onClick, false);
