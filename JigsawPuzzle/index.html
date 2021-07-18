@@ -44,9 +44,9 @@
           p.then(function(pieces){
             //context.drawImage(pieces[0], 0, 0);
             for (let y = 0; y < 6; ++y) {
-              for (let x = 0; x < 10; ++x) {
-                let index = (y * 10) + x;
-                context.drawImage(pieces[index], 80 * x, 110 * y);
+              for (let x = 0; x < 12; ++x) {
+                let index = (y * 12) + x;
+                pieces[index].draw(context, 80 * x, 110 * y);
               }
             }
           });

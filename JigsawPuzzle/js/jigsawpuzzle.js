@@ -11,6 +11,47 @@
     P2100:16, P2102:17, P2211:18
   };
 
+  /** ピースのジョイント部分のサイズ */
+  const PIECE_JOINT_SIZE = 20;
+  /** ジョイント部分を除くピースのサイズ */
+  const IMAGE_SPLIT_SIZE = 75
+  /** ピース全体の画像サイズ */
+  const PIECE_SIZE = IMAGE_SPLIT_SIZE + (PIECE_JOINT_SIZE * 2);
+  
+  class PuzzlePiece {
+    constructor(pattern, image) {
+      this.pattern = pattern;
+      this.offsetX = 0;
+      this.offsetY = 0;
+      switch (pattern) {
+        case PiecePattern.P1000:
+        case PiecePattern.P1010:
+        case PiecePattern.P1021:
+        case PiecePattern.P1022:
+        case PiecePattern.P1101:
+        case PiecePattern.P1112:
+        case PiecePattern.P1210:
+          this.offsetY = PIECE_JOINT_SIZE;
+          break;
+      }
+      switch (pattern) {
+        case PiecePattern.P0011:
+        case PiecePattern.P0101:
+        case PiecePattern.P0201:
+        case PiecePattern.P1021:
+        case PiecePattern.P0221:
+        case PiecePattern.P1101:
+        case PiecePattern.P2211:
+          this.offsetX = PIECE_JOINT_SIZE;
+          break;
+      }
+      this.image = image;
+    }
+    draw(context, x, y) {
+      context.drawImage(this.image, x - this.offsetX, y - this.offsetY);
+    }
+  }
+
   /**
    * ピースを作成
    * @param {*} context 
@@ -1081,18 +1122,15 @@
    * @returns Promise オブジェクト
    */
   JigsawPuzzle.Core.createPieces = function(image) {
-    let splitSize = 60;
-    let pieceSize = 80;
-    let row = image.width / pieceSize;
-    let column = image.height / pieceSize;
+    const PIECE_SIZE_ONE = IMAGE_SPLIT_SIZE + PIECE_JOINT_SIZE;
+    let row = Math.ceil(image.width / IMAGE_SPLIT_SIZE) + 1;
+    let column = Math.ceil(image.height / IMAGE_SPLIT_SIZE);
 
-    let jointWidth = pieceSize / 3;
-    let jointHeight = pieceSize /3;
-    let width = pieceSize + jointWidth * 2;
-    let height = pieceSize + jointHeight * 2;
+    let width = PIECE_SIZE;
+    let height = PIECE_SIZE;
 
-    let xOffset = (image.width % pieceSize) / 2;
-    let yOffset = (image.height % pieceSize) / 2;
+    let xOffset = (image.width % PIECE_SIZE) / 2;
+    let yOffset = (image.height % PIECE_SIZE) / 2;
     console.log("yOffset" + yOffset);
     console.log("image.width:" + image.width, "image.height:" + image.height);
 
@@ -1105,23 +1143,19 @@
 
     // Canvas -> DataURL に変換
     let dataURLList = []
-    /*for(let num = 0; num < row * column; num++) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      clipPiece(context, {
-        pattern: PiecePattern.P2211,
-        width: width,
-        height: height,
-      });
-      context.drawImage(image, width * (num % row), height * Math.floor(num / row), width, height, 0, 0, width, height);
-
-      dataURLList.push(canvas.toDataURL());
-    }*/
 
     let patterns = []
+
     patterns.push(PiecePattern.P2102);
-    for(let x = 0; x < row - 3; ++x) {
-      patterns.push(PiecePattern.P2100);
-    }
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
+    patterns.push(PiecePattern.P2100);
     patterns.push(PiecePattern.P2010);
     patterns.push(PiecePattern.P2211);
     
@@ -1134,7 +1168,9 @@
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P0011);
-    patterns.push(PiecePattern.P0101);
+    patterns.push(PiecePattern.P1000);
+    patterns.push(PiecePattern.P1101);
+    patterns.push(PiecePattern.P0201);
 
     patterns.push(PiecePattern.P0102);
     patterns.push(PiecePattern.P1000);
@@ -1143,6 +1179,8 @@
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P1101);
+    patterns.push(PiecePattern.P1000);
+    patterns.push(PiecePattern.P0101);
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P0101);
     patterns.push(PiecePattern.P1210);
@@ -1155,10 +1193,14 @@
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
-    patterns.push(PiecePattern.P1101);//
+    patterns.push(PiecePattern.P1101);
+    patterns.push(PiecePattern.P1000);
+    patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P0210);
 
     patterns.push(PiecePattern.P0102);
+    patterns.push(PiecePattern.P1000);
+    patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
@@ -1178,9 +1220,8 @@
     patterns.push(PiecePattern.P1021);
     patterns.push(PiecePattern.P1021);
     patterns.push(PiecePattern.P1021);
+    patterns.push(PiecePattern.P1021);
     patterns.push(PiecePattern.P0221);
-
-
 
     console.log("row:" + row, "column:" + column);
     for(let y = 0; y < column; ++y) {
@@ -1193,28 +1234,29 @@
           width: width,
           height: height,
         });
-        let startX = x * pieceSize - xOffset, startY = y * pieceSize - yOffset;
-        context.drawImage(image, startX, startY, width + jointWidth, height + jointHeight, 0, 0, width + jointWidth, height + jointHeight);
-        dataURLList.push(canvas.toDataURL());
+        let startX = x * IMAGE_SPLIT_SIZE - xOffset, startY = y * IMAGE_SPLIT_SIZE - yOffset;
+        context.drawImage(image, startX, startY, width, height, 0, 0, width, height);
         context.restore();
+        dataURLList.push(canvas.toDataURL());
       }
     }
 
     // DataURL から Image にロード
     return new Promise(
       (resolve, _) => {
-        let imageList = []
+        let pieceList = []
         let loadedCount = 0;
         for (let i in dataURLList) {
-          imageList[i] = new Image();
-          imageList[i].src = dataURLList[i];
-          imageList[i].addEventListener("load", function() {
-            if (++loadedCount >= imageList.length) {
-              resolve(imageList);
+          let pieceImage = new Image();
+          pieceImage.src = dataURLList[i];
+          pieceImage.addEventListener("load", function() {
+            if (++loadedCount >= pieceList.length) {
+              resolve(pieceList);
             }
           });
+          pieceList[i] = new PuzzlePiece(patterns[i], pieceImage);
         }
-        return imageList;
+        return pieceList;
       }
     );
   };
