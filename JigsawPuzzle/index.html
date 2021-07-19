@@ -40,13 +40,18 @@
       let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
       loaded.then(function(imageList) {
         canvas = JigsawPuzzle.Common.run(function(context) {
-          let p = JigsawPuzzle.Core.createPieces(imageList[0]);
+          let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
+            image: imageList[0],
+            row: 8,
+            column: 6
+          });
+          
+          let p = puzzleMaker.createPieces();
           p.then(function(pieces){
-            //context.drawImage(pieces[0], 0, 0);
-            for (let y = 0; y < 6; ++y) {
-              for (let x = 0; x < 12; ++x) {
-                let index = (y * 12) + x;
-                pieces[index].draw(context, 80 * x, 110 * y);
+            for (let y = 0; y < puzzleMaker.column; ++y) {
+              for (let x = 0; x < puzzleMaker.row; ++x) {
+                let index = (y * puzzleMaker.row) + x;
+                pieces[index].draw(context, 160 * x, 115 * y);
               }
             }
           });

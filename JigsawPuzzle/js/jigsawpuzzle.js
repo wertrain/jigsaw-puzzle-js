@@ -3,54 +3,91 @@
 
   JigsawPuzzle.Core = {};
 
-  let PiecePattern = {
-    P0011: 0, P0012: 1, P0100: 2, P0101: 3,
-    P0102: 4, P0201: 5, P0210: 6, P0221: 7,
-    P1000: 8, P1010: 9, P1021:10, P1022:11,
-    P1101:12, P1112:13, P1210:14, P2010:15,
-    P2100:16, P2102:17, P2211:18
-  };
-
   /** ピースのジョイント部分のサイズ */
   const PIECE_JOINT_SIZE = 20;
   /** ジョイント部分を除くピースのサイズ */
   const IMAGE_SPLIT_SIZE = 75
   /** ピース全体の画像サイズ */
   const PIECE_SIZE = IMAGE_SPLIT_SIZE + (PIECE_JOINT_SIZE * 2);
-  
+
+    
   class PuzzlePiece {
-    constructor(pattern, image) {
-      this.pattern = pattern;
-      this.offsetX = 0;
-      this.offsetY = 0;
-      switch (pattern) {
-        case PiecePattern.P1000:
-        case PiecePattern.P1010:
-        case PiecePattern.P1021:
-        case PiecePattern.P1022:
-        case PiecePattern.P1101:
-        case PiecePattern.P1112:
-        case PiecePattern.P1210:
-          this.offsetY = PIECE_JOINT_SIZE;
-          break;
-      }
-      switch (pattern) {
-        case PiecePattern.P0011:
-        case PiecePattern.P0101:
-        case PiecePattern.P0201:
-        case PiecePattern.P1021:
-        case PiecePattern.P0221:
-        case PiecePattern.P1101:
-        case PiecePattern.P2211:
-          this.offsetX = PIECE_JOINT_SIZE;
-          break;
-      }
+    constructor(image, jointWidth, jointHeight) {
       this.image = image;
+      this.jointWidth = jointWidth;
+      this.jointHeight = jointHeight;
     }
     draw(context, x, y) {
-      context.drawImage(this.image, x - this.offsetX, y - this.offsetY);
+      context.drawImage(this.image, x - this.jointWidth, y - this.jointHeight);
     }
-  }
+  };
+
+  class JigsawPuzzleMaker {
+    constructor(param) {
+      this.image = param.image;
+      this.row = param.row;
+      this.column = param.column;
+    }
+    createPieces() {
+      let width = this.image.width / this.row;
+      let height = this.image.height / this.column;
+      let jointWidth = width * 0.25;
+      let jointHeight = height * 0.25;
+      let pieceWidth = width + jointWidth * 2;
+      let pieceHeight = height + jointHeight * 2;
+
+      let canvas = document.createElement('canvas');
+      canvas.setAttribute('width', pieceWidth);
+      canvas.setAttribute('height', pieceHeight);
+      canvas.setAttribute('hidden', true);
+      document.body.appendChild(canvas);
+      let context = canvas.getContext('2d');
+
+      let dataURLList = [];
+      for(let y = 0; y < this.column; ++y) {
+        for(let x = 0; x < this.row; ++x) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.save();
+
+          context.beginPath();
+          context.moveTo(jointWidth, jointHeight);
+          context.lineTo(jointWidth + width, jointHeight);
+          context.lineTo(jointWidth + width, jointHeight + height);
+          context.lineTo(jointWidth, jointHeight + height);
+          context.closePath();
+          context.clip();
+          
+          context.drawImage(this.image, 
+            (width * x) - jointWidth, (height * y) - jointHeight, pieceWidth, pieceHeight, 
+            0, 0, pieceWidth, pieceHeight
+          );
+
+          context.restore();
+          dataURLList.push(canvas.toDataURL());
+        }
+      }
+
+      // DataURL から Image にロード
+      return new Promise(
+        (resolve, _) => {
+          let pieceList = []
+          let loadedCount = 0;
+          for (let i in dataURLList) {
+            let pieceImage = new Image();
+            pieceImage.src = dataURLList[i];
+            pieceImage.addEventListener("load", function() {
+              if (++loadedCount >= pieceList.length) {
+                resolve(pieceList);
+              }
+            });
+            pieceList[i] = new PuzzlePiece(pieceImage, jointWidth, jointHeight);
+          }
+          return pieceList;
+        }
+      );
+    }
+  };
+  JigsawPuzzle.Core.JigsawPuzzleMaker = JigsawPuzzleMaker;
 
   /**
    * ピースを作成
@@ -1168,7 +1205,6 @@
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P0011);
-    patterns.push(PiecePattern.P1000);
     patterns.push(PiecePattern.P1101);
     patterns.push(PiecePattern.P0201);
 
