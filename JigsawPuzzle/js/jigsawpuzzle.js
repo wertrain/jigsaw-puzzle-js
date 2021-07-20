@@ -31,10 +31,15 @@
     createPieces() {
       let width = this.image.width / this.row;
       let height = this.image.height / this.column;
-      let jointWidth = width * 0.25;
-      let jointHeight = height * 0.25;
+      let jointWidth = width * 0.4;
+      let jointHeight = height * 0.4;
+      let jointArcRadius = 6;
+      let jointArcSize = jointArcRadius * 2;
       let pieceWidth = width + jointWidth * 2;
       let pieceHeight = height + jointHeight * 2;
+
+      let halfWidth = width / 2;
+      let halfHeight = height / 2;
 
       let canvas = document.createElement('canvas');
       canvas.setAttribute('width', pieceWidth);
@@ -49,12 +54,26 @@
           context.clearRect(0, 0, canvas.width, canvas.height);
           context.save();
 
+
           context.beginPath();
-          context.moveTo(jointWidth, jointHeight);
-          context.lineTo(jointWidth + width, jointHeight);
-          context.lineTo(jointWidth + width, jointHeight + height);
-          context.lineTo(jointWidth, jointHeight + height);
-          context.closePath();
+          // 上の ON ジョイント作成
+          //context.arc(width - jointArcSize, jointHeight / 2, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          //context.moveTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), jointHeight - jointArcSize);
+          //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight - jointArcSize);
+          //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight - jointArcSize + height / 4);
+          //context.lineTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), jointHeight - jointArcSize + height / 4);
+          //context.closePath();
+          // 上の OFF ジョイント作成
+          context.moveTo(0, 0);
+          context.lineTo(width, 0);
+          context.lineTo(width, jointHeight);
+          context.lineTo(0, jointHeight);
+
+          //context.moveTo(jointWidth, jointHeight);
+          //context.lineTo(jointWidth + width, jointHeight);
+          //context.lineTo(jointWidth + width, jointHeight + height);
+          //context.lineTo(jointWidth, jointHeight + height);
+          //context.closePath();
           context.clip();
           
           context.drawImage(this.image, 
