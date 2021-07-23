@@ -39,19 +39,22 @@
       //imageList = JigsawPuzzle.Common.loadImages(["./image/sample.jpg"], function() {
       let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
       loaded.then(function(imageList) {
-        canvas = JigsawPuzzle.Common.run(function(context) {
+        canvas = JigsawPuzzle.Common.run(function(context, width, height) {
           let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
             image: imageList[0],
             row: 8,
             column: 6
           });
-          
+          console.log(canvas);
+          let offsetX = width * 0.5 - imageList[0].width * 0.5;
+          let offsetY = height * 0.5 - imageList[0].height * 0.5;
+
           let p = puzzleMaker.createPieces();
           p.then(function(pieces){
             for (let y = 0; y < puzzleMaker.column; ++y) {
               for (let x = 0; x < puzzleMaker.row; ++x) {
                 let index = (y * puzzleMaker.row) + x;
-                pieces[index].draw(context, 102 * x, 76 * y);
+                pieces[index].draw(context, offsetX + 102 * x, offsetY + 76 * y);
               }
             }
           });
