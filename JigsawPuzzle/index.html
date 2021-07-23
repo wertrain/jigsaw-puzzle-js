@@ -45,7 +45,7 @@
             row: 8,
             column: 6
           });
-          console.log(canvas);
+
           let offsetX = width * 0.5 - imageList[0].width * 0.5;
           let offsetY = height * 0.5 - imageList[0].height * 0.5;
 
@@ -54,7 +54,8 @@
             for (let y = 0; y < puzzleMaker.column; ++y) {
               for (let x = 0; x < puzzleMaker.row; ++x) {
                 let index = (y * puzzleMaker.row) + x;
-                pieces[index].draw(context, offsetX + 102 * x, offsetY + 76 * y);
+                let piece = pieces[index];
+                piece.draw(context, offsetX + (piece.width + 1) * x + 1, offsetY + (piece.height + 1) * y);
               }
             }
           });
