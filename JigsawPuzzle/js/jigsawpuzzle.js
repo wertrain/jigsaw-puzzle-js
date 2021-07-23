@@ -56,26 +56,48 @@
 
 
           context.beginPath();
+          context.moveTo(jointWidth, jointHeight);
+          context.lineTo(jointWidth + width, jointHeight);
+          context.lineTo(jointWidth + width, jointHeight + height);
+          context.lineTo(jointWidth, jointHeight + height);
+          
           // 上の ON ジョイント作成
-          //context.arc(width - jointArcSize, jointHeight / 2, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
-          //context.moveTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), jointHeight - jointArcSize);
+          //context.arc(pieceWidth / 2, jointHeight / 2, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          //context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight - jointArcSize);
           //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight - jointArcSize);
           //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight - jointArcSize + height / 4);
-          //context.lineTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), jointHeight - jointArcSize + height / 4);
+          //context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight - jointArcSize + height / 4);
           //context.closePath();
+          //context.clip();
           // 上の OFF ジョイント作成
+          /*
+          context.arc(pieceWidth / 2, jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          
           context.moveTo(0, 0);
-          context.lineTo(width, 0);
-          context.lineTo(width, jointHeight);
+          context.lineTo(pieceWidth, 0);
+          context.lineTo(pieceWidth, jointHeight);
           context.lineTo(0, jointHeight);
 
-          //context.moveTo(jointWidth, jointHeight);
-          //context.lineTo(jointWidth + width, jointHeight);
-          //context.lineTo(jointWidth + width, jointHeight + height);
-          //context.lineTo(jointWidth, jointHeight + height);
-          //context.closePath();
+          context.moveTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), 0);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize, 0);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize, jointHeight - jointArcSize);
+          context.lineTo((jointWidth + width * 0.5) - jointArcSize + (jointArcRadius / 2), jointHeight - jointArcSize);
+          */
+         
+
+          context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight + jointHeight - jointArcSize);
+          context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight + jointHeight - jointArcSize);
+          context.closePath();
+          context.arc(pieceWidth / 2, jointHeight + jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          context.clip("evenodd");
+          context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight);
+          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight + jointHeight);
+          context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight + jointHeight);
+          context.closePath();
           context.clip();
-          
           context.drawImage(this.image, 
             (width * x) - jointWidth, (height * y) - jointHeight, pieceWidth, pieceHeight, 
             0, 0, pieceWidth, pieceHeight
