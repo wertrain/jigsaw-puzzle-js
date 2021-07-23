@@ -28,12 +28,65 @@
       this.row = param.row;
       this.column = param.column;
     }
+    clipPiece(context, left, right, top, bottom) {
+      let width = this.image.width / this.row;
+      let height = this.image.height / this.column;
+      let jointWidth = width * 0.4;
+      let jointHeight = height * 0.4;
+      let jointArcRadius = 8;
+      let jointArcSize = jointArcRadius * 2;
+      let pieceWidth = width + jointWidth * 2;
+      let pieceHeight = height + jointHeight * 2;
+
+      // ベースの切り抜き
+      context.beginPath();
+      context.moveTo(jointWidth, jointHeight);
+      context.lineTo(jointWidth + width, jointHeight);
+      context.lineTo(jointWidth + width, jointHeight + height);
+      context.lineTo(jointWidth, jointHeight + height);
+      context.closePath();
+      
+      context.moveTo(jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize);
+      if (left) {
+        context.arc(jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 90 * Math.PI / 180, 270 * Math.PI / 180, false);
+      } else {
+        context.arc(jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 270 * Math.PI / 180, 90 * Math.PI / 180, false);
+      }
+      context.closePath();
+
+      context.moveTo(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize);
+      if (right) {
+        context.arc(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 270 * Math.PI / 180, 90 * Math.PI / 180, false);
+      } else {
+        context.arc(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 90 * Math.PI / 180, 270 * Math.PI / 180, false);
+      }
+      context.closePath();
+
+      context.moveTo(jointWidth * 0.5, jointHeight);
+      if (top) {
+        context.arc(pieceWidth * 0.5, jointHeight, jointArcSize, 180 * Math.PI / 180, 360 * Math.PI / 180, false);
+      } else {
+        context.arc(pieceWidth * 0.5, jointHeight, jointArcSize, 360 * Math.PI / 180, 180 * Math.PI / 180, false);
+      }
+      context.closePath();
+
+      context.moveTo(pieceWidth / 2, height + jointHeight, jointArcSize);
+      if (bottom) {
+        context.arc(pieceWidth / 2, height + jointHeight, jointArcSize, 360 * Math.PI / 180, 180 * Math.PI / 180, false);
+      } else {
+        context.arc(pieceWidth * 0.5, jointHeight, jointArcSize, 360 * Math.PI / 180, 180 * Math.PI / 180, false);
+      }
+      context.closePath();
+
+      context.clip("evenodd");
+    }
+
     createPieces() {
       let width = this.image.width / this.row;
       let height = this.image.height / this.column;
       let jointWidth = width * 0.4;
       let jointHeight = height * 0.4;
-      let jointArcRadius = 6;
+      let jointArcRadius = 8;
       let jointArcSize = jointArcRadius * 2;
       let pieceWidth = width + jointWidth * 2;
       let pieceHeight = height + jointHeight * 2;
@@ -55,12 +108,17 @@
           context.save();
 
 
+          // ベースの切り抜き
           context.beginPath();
           context.moveTo(jointWidth, jointHeight);
           context.lineTo(jointWidth + width, jointHeight);
           context.lineTo(jointWidth + width, jointHeight + height);
           context.lineTo(jointWidth, jointHeight + height);
-          
+          context.closePath();
+
+          this.clipPiece(context, true, false, false, true);
+
+
           // 上の ON ジョイント作成
           //context.arc(pieceWidth / 2, jointHeight / 2, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
           //context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight - jointArcSize);
@@ -70,7 +128,31 @@
           //context.closePath();
           //context.clip();
           // 上の OFF ジョイント作成
-          /*
+          //context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight);
+          //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight);
+          //context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight + jointHeight - jointArcSize);
+          //context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight + jointHeight - jointArcSize);
+          //context.closePath();
+          //context.arc(pieceWidth / 2, jointHeight + jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          //context.clip("evenodd");
+          // 右の ON ジョイント作成
+          //context.closePath();
+          //context.arc(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          //context.clip();
+          
+          // 右の OFF ジョイント作成
+          //context.moveTo(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize);
+          //context.arc(pieceWidth - jointWidth, (jointHeight * 0.5 + height * 0.5) + jointArcSize, jointArcSize, 90 * Math.PI / 180, 270 * Math.PI / 180);
+          //context.closePath();
+          //context.clip("evenodd");
+          // 下の ON ジョイント作成
+          //context.arc(pieceWidth / 2, height + jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
+          //context.closePath();
+          //context.clip();
+          // 下の OFF ジョイント作成
+          //context.moveTo(pieceWidth * 0.5, (jointHeight * 0.5 + height) + jointArcSize - 1);
+          //context.arc(pieceWidth * 0.5, (jointHeight * 0.5 + height) + jointArcSize - 1, jointArcSize, 180 * Math.PI / 180, 360 * Math.PI / 180);
+                   /*
           context.arc(pieceWidth / 2, jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
           
           context.moveTo(0, 0);
@@ -85,19 +167,8 @@
           */
          
 
-          context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight);
-          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight);
-          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight + jointHeight - jointArcSize);
-          context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight + jointHeight - jointArcSize);
-          context.closePath();
-          context.arc(pieceWidth / 2, jointHeight + jointHeight, jointArcSize, 0 * Math.PI / 180, 360 * Math.PI / 180, false);
-          context.clip("evenodd");
-          context.moveTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight);
-          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight);
-          context.lineTo((jointWidth + width * 0.5) + jointArcSize - jointArcRadius, jointHeight + jointHeight);
-          context.lineTo((jointWidth + width * 0.5) - jointArcSize + jointArcRadius, jointHeight + jointHeight);
-          context.closePath();
-          context.clip();
+
+
           context.drawImage(this.image, 
             (width * x) - jointWidth, (height * y) - jointHeight, pieceWidth, pieceHeight, 
             0, 0, pieceWidth, pieceHeight
@@ -136,7 +207,7 @@
    * @param {*} param 
    * @returns 
    */
-  let clipPiece = function(context, param) {
+  let clipPiece0 = function(context, param) {
     switch (param.pattern) {
       case PiecePattern.P0011:
         context.beginPath();
