@@ -19,16 +19,16 @@
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       }
-      function onClick(e) {
-
-      }
     </script>
 
+    <canvas id="canvas" width="1280" height="720"></canvas>
+    <!-- 
     <div class="container">
       <canvas id="canvas" width="1280" height="720"></canvas>
       <canvas id="background-canvas" width="100" height="100" hidden></canvas>
-    </div> <!-- /container -->
-    
+    </div>
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.min.js" integrity="sha512-pi0tSRZdlNRZeANPwdAIHRAYg6gZZV6QlAiyHXn5TYqLzBKE9jlttO/QgYLMhISD6oNv2kPsVelx+n5nw0FqKA==" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -36,31 +36,97 @@
     <script src="./js/resources.js"></script>
     <script src="./js/jigsawpuzzle.js"></script>
     <script>
+
+      let createPuzzle = (canvas, pieces, column, row) => {
+        const Engine = Matter.Engine,
+              Render = Matter.Render,
+              World = Matter.World,
+              Bodies = Matter.Bodies,
+              Body = Matter.Body;
+
+        const engine = Engine.create();
+        var render = Render.create({
+            canvas: canvas,
+            engine: engine,
+            options: {
+                width: canvas.width,
+                height: canvas.height,
+                background: '#000',
+                wireframes: false,
+                showAngleIndicator: true
+            }
+        });
+        const groundWidth = canvas.width, groundHeight = canvas.height, groundThickness = 4;
+        var ground = Bodies.rectangle(groundWidth / 2  - groundThickness, groundHeight - groundThickness, groundWidth, groundThickness, { isStatic: true, render: {fillStyle: '#000'} });
+        var wallL = Bodies.rectangle(0, groundHeight / 2 - groundThickness, groundThickness * 2, groundHeight, { isStatic: true, render: {fillStyle: '#000'} });
+        var wallR = Bodies.rectangle(groundWidth - groundThickness, groundHeight / 2 - groundThickness, groundThickness, groundHeight, { isStatic: true, render: {fillStyle: '#000'} });
+        World.add(engine.world, [ground, wallL, wallR]);
+
+        let pieceScale = 1.0;
+        let imageWidth = 720 * pieceScale;
+        let imageHeight = 480 * pieceScale;
+        let canvasOffsetX = canvas.width * 0.5 - imageWidth * 0.5;
+        let canvasOffsetY = canvas.height * 0.5 - imageHeight * 0.5;
+        let pieceOffset = 0;
+
+
+        let boxes = []
+
+        for (let y = 0; y < column; ++y) {
+          for (let x = 0; x < row; ++x) {
+            let index = (y * row) + x;
+            let piece = pieces[index];
+            let pieceWidth = piece.width * pieceScale;
+            let pieceHeight = piece.height * pieceScale;
+            var box = Bodies.rectangle(
+              canvasOffsetX + (pieceWidth + pieceOffset) * x,
+              canvasOffsetY + (pieceHeight + pieceOffset) * y, pieceWidth, pieceHeight, {
+                density: 0.1,
+                frictionAir: 0.0006,
+                restitution: 1.0,
+                friction: 1.0,
+                render: {
+                  sprite: {
+                    texture: piece.image.src,
+                    xScale: pieceScale,
+                    yScale: pieceScale
+                  }
+                }
+            });
+            box.isStatic = true;
+            boxes.push(box);
+          }
+        }
+
+        World.add(engine.world, boxes);
+        Engine.run(engine);
+        Render.run(render);
+
+        canvas.addEventListener('click', (e) => {
+          boxes.forEach((box) => {
+            let power = 20.0;
+            Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
+            box.isStatic = false
+          });
+        }, false);
+      };
+
       //imageList = JigsawPuzzle.Common.loadImages(["./image/sample.jpg"], function() {
       let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
       loaded.then(function(imageList) {
-        canvas = JigsawPuzzle.Common.run(function(context, width, height) {
+        JigsawPuzzle.Common.run(function(context, canvas) {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
           let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
             image: imageList[0],
-            row: 8,
-            column: 6
+            row: 10,
+            column: 8
           });
-
-          let offsetX = width * 0.5 - imageList[0].width * 0.5;
-          let offsetY = height * 0.5 - imageList[0].height * 0.5;
-
           let p = puzzleMaker.createPieces();
           p.then(function(pieces){
-            for (let y = 0; y < puzzleMaker.column; ++y) {
-              for (let x = 0; x < puzzleMaker.row; ++x) {
-                let index = (y * puzzleMaker.row) + x;
-                let piece = pieces[index];
-                piece.draw(context, offsetX + (piece.width + 1) * x + 1, offsetY + (piece.height + 1) * y);
-              }
-            }
+            createPuzzle(canvas, pieces, puzzleMaker.column, puzzleMaker.row)
           });
         });
-        canvas.addEventListener('click', onClick, false);
       });
     </script>
   </body>

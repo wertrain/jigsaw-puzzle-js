@@ -28,7 +28,7 @@ var JigsawPuzzle = {};
   JigsawPuzzle.Common.run = function(drawFunc) {
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
-    drawFunc(context, canvas.width, canvas.height);
+    drawFunc(context, canvas);
     return canvas;
   };
 }

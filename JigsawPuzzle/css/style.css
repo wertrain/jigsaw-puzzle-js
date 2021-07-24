@@ -1,5 +1,6 @@
 body {
-  padding-top: 16px;
+  padding: 0px;
+  background-color: #000000;
 }
 #canvas {
   border: solid 1px #000000;
