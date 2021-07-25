@@ -38,7 +38,7 @@
       let height = this.image.height / this.column;
       let jointWidth = width * 0.4;
       let jointHeight = height * 0.4;
-      let jointArcRadius = 8;
+      let jointArcRadius = height * 0.085;
       let jointArcSize = jointArcRadius * 2;
       let pieceWidth = width + jointWidth * 2;
       let pieceHeight = height + jointHeight * 2;
