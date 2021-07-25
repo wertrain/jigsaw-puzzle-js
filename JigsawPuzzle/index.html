@@ -37,25 +37,33 @@
     <script src="./js/jigsawpuzzle.js"></script>
     <script>
 
-      let createPuzzle = (canvas, pieces, column, row) => {
+      let createPuzzle = (canvas, pieces, column, row, example) => {
         const Engine = Matter.Engine,
               Render = Matter.Render,
               World = Matter.World,
               Bodies = Matter.Bodies,
-              Body = Matter.Body;
+              Body = Matter.Body,
+              Composite = Matter.Composite,
+              Mouse = Matter.Mouse,
+              MouseConstraint = Matter.MouseConstraint;
 
         const engine = Engine.create();
         var render = Render.create({
             canvas: canvas,
             engine: engine,
+            controller: JigsawPuzzle.Matter.customRender(Render),
             options: {
                 width: canvas.width,
                 height: canvas.height,
-                background: '#000',
+                background: '#fff',
                 wireframes: false,
-                showAngleIndicator: true
+                //showAngleIndicator: true,
+                //showStats: true,
+                //showVelocity: true,
+                //showVertexNumbers: true
             }
         });
+        console.log(render);
         const groundWidth = canvas.width, groundHeight = canvas.height, groundThickness = 4;
         var ground = Bodies.rectangle(groundWidth / 2  - groundThickness, groundHeight - groundThickness, groundWidth, groundThickness, { isStatic: true, render: {fillStyle: '#000'} });
         var wallL = Bodies.rectangle(0, groundHeight / 2 - groundThickness, groundThickness * 2, groundHeight, { isStatic: true, render: {fillStyle: '#000'} });
@@ -69,9 +77,7 @@
         let canvasOffsetY = canvas.height * 0.5 - imageHeight * 0.5;
         let pieceOffset = 0;
 
-
         let boxes = []
-
         for (let y = 0; y < column; ++y) {
           for (let x = 0; x < row; ++x) {
             let index = (y * row) + x;
@@ -81,10 +87,6 @@
             var box = Bodies.rectangle(
               canvasOffsetX + (pieceWidth + pieceOffset) * x,
               canvasOffsetY + (pieceHeight + pieceOffset) * y, pieceWidth, pieceHeight, {
-                density: 0.1,
-                frictionAir: 0.0006,
-                restitution: 1.0,
-                friction: 1.0,
                 render: {
                   sprite: {
                     texture: piece.image.src,
@@ -92,23 +94,86 @@
                     yScale: pieceScale
                   }
                 }
-            });
-            box.isStatic = true;
+              }
+            );
+            box.isStatic = false;
+            let power = 20.0;
+            Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
             boxes.push(box);
           }
         }
 
+        // add mouse control
+        var mouse = Mouse.create(render.canvas),
+          mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+              stiffness: 0.2,
+              render: {
+                visible: false
+              }
+            }
+          });
+
+        World.add(engine.world, mouseConstraint);
+
+        Matter.Events.on(mouseConstraint, "mousedown", function(event) {
+          //World.add(engine.world, Bodies.circle(150, 50, 30, { restitution: 0.7 }));
+        });
+
+        // an example of using mouse events on a mouse
+        Matter.Events.on(mouseConstraint, 'startdrag', function(event) {
+          Matter.Sleeping.set(event.body, true);
+        });
+
+        // an example of using mouse events on a mouse
+        Matter.Events.on(mouseConstraint, 'enddrag', function(event) {
+          Matter.Sleeping.set(event.body, false);
+        });
+
+        // an example of using beforeUpdate event on an engine
+        Matter.Events.on(render, 'beforeRender', function(event) {
+          event.source.context.fillStyle = "rgba(0, 255, 255, 0.5)";
+          event.source.context.drawImage(example, 0, 0);
+          //console.log(event)
+        });
+/*
+        (function render() {
+          var bodies = Composite.allBodies(engine.world);
+          window.requestAnimationFrame(render);
+          let context = canvas.getContext('2d');
+
+          context.fillStyle = '#fff';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(example, 0, 0);
+          context.beginPath();
+          for (var i = 0; i < bodies.length; i += 1) {
+            var vertices = bodies[i].vertices;
+            context.moveTo(vertices[0].x, vertices[0].y);
+
+            for (var j = 1; j < vertices.length; j += 1) {
+              context.lineTo(vertices[j].x, vertices[j].y);
+            }
+
+            context.lineTo(vertices[0].x, vertices[0].y);
+          }
+          context.lineWidth = 1;
+          context.strokeStyle = '#999';
+          context.stroke();
+        })();
+*/
         World.add(engine.world, boxes);
         Engine.run(engine);
         Render.run(render);
 
+        /*
         canvas.addEventListener('click', (e) => {
           boxes.forEach((box) => {
             let power = 20.0;
             Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
             box.isStatic = false
           });
-        }, false);
+        }, false);*/
       };
 
       //imageList = JigsawPuzzle.Common.loadImages(["./image/sample.jpg"], function() {
@@ -119,12 +184,12 @@
           canvas.height = window.innerHeight;
           let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
             image: imageList[0],
-            row: 10,
-            column: 8
+            row: 4,
+            column: 4
           });
           let p = puzzleMaker.createPieces();
           p.then(function(pieces){
-            createPuzzle(canvas, pieces, puzzleMaker.column, puzzleMaker.row)
+            createPuzzle(canvas, pieces, puzzleMaker.column, puzzleMaker.row, imageList[0])
           });
         });
       });
