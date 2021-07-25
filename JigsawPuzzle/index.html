@@ -22,18 +22,13 @@
     </script>
 
     <canvas id="canvas" width="1280" height="720"></canvas>
-    <!-- 
-    <div class="container">
-      <canvas id="canvas" width="1280" height="720"></canvas>
-      <canvas id="background-canvas" width="100" height="100" hidden></canvas>
-    </div>
-    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.min.js" integrity="sha512-pi0tSRZdlNRZeANPwdAIHRAYg6gZZV6QlAiyHXn5TYqLzBKE9jlttO/QgYLMhISD6oNv2kPsVelx+n5nw0FqKA==" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="./js/common.js"></script>
     <script src="./js/resources.js"></script>
+    <script src="./js/utils.js"></script>
     <script src="./js/jigsawpuzzle.js"></script>
     <script>
 
@@ -51,7 +46,6 @@
         var render = Render.create({
             canvas: canvas,
             engine: engine,
-            controller: JigsawPuzzle.Matter.customRender(Render),
             options: {
                 width: canvas.width,
                 height: canvas.height,
@@ -71,37 +65,70 @@
         World.add(engine.world, [ground, wallL, wallR]);
 
         let pieceScale = 1.0;
-        let imageWidth = 720 * pieceScale;
-        let imageHeight = 480 * pieceScale;
-        let canvasOffsetX = canvas.width * 0.5 - imageWidth * 0.5;
-        let canvasOffsetY = canvas.height * 0.5 - imageHeight * 0.5;
-        let pieceOffset = 0;
+        let imageWidth = example.width * pieceScale;
+        let imageHeight = example.height * pieceScale;
+        let canvasOffsetX = canvas.width * 0.5;
+        let canvasOffsetY = canvas.height * 0.5;
 
-        let boxes = []
-        for (let y = 0; y < column; ++y) {
-          for (let x = 0; x < row; ++x) {
-            let index = (y * row) + x;
-            let piece = pieces[index];
-            let pieceWidth = piece.width * pieceScale;
-            let pieceHeight = piece.height * pieceScale;
-            var box = Bodies.rectangle(
-              canvasOffsetX + (pieceWidth + pieceOffset) * x,
-              canvasOffsetY + (pieceHeight + pieceOffset) * y, pieceWidth, pieceHeight, {
-                render: {
-                  sprite: {
-                    texture: piece.image.src,
-                    xScale: pieceScale,
-                    yScale: pieceScale
+        let exampleBody = Bodies.rectangle(
+          canvasOffsetX, canvasOffsetY, imageWidth, imageHeight, {
+            isStatic: true,
+            render: {
+              sprite: {
+                texture: example.src,
+                xScale: pieceScale,
+                yScale: pieceScale
+              }
+            }
+          }
+        );
+
+        let createBoxes = (pieceOffset, func) => {
+          let boxes = []
+          let pieceOffsetHalf = pieceOffset * 0.5;
+          for (let y = 0; y < column; ++y) {
+            for (let x = 0; x < row; ++x) {
+              let index = (y * row) + x;
+              let piece = pieces[index];
+              let pieceWidth = piece.width * pieceScale;
+              let pieceHeight = piece.height * pieceScale;
+              let box = Bodies.rectangle(
+                (canvasOffsetX - (imageWidth * 0.5) - pieceOffsetHalf) + ((pieceWidth + pieceOffsetHalf) * x) + pieceWidth * 0.5,
+                (canvasOffsetY - (imageHeight * 0.5) - pieceOffsetHalf) + ((pieceHeight + pieceOffsetHalf) * y) + pieceHeight * 0.5, pieceWidth, pieceHeight, {
+                  render: {
+                    sprite: {
+                      texture: piece.image.src,
+                      xScale: pieceScale,
+                      yScale: pieceScale
+                    }
                   }
                 }
-              }
-            );
+              )
+              func(box);
+              boxes.push(box);
+            }
+          }
+          return boxes;
+        };
+
+        let exampleBoxes = createBoxes(3, (box) => {
+            box.isStatic = true;
+            let power = 20.0;
+            Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
+            box.collisionFilter = {
+              'group': -1,
+              'category': 2,
+              'mask': 0,
+            };
+        });
+
+        let boxes = createBoxes(0, (box) => {
             box.isStatic = false;
             let power = 20.0;
             Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
-            boxes.push(box);
-          }
-        }
+        });
+        World.add(engine.world, exampleBoxes);
+        World.add(engine.world, boxes);
 
         // add mouse control
         var mouse = Mouse.create(render.canvas),
@@ -137,32 +164,8 @@
           event.source.context.drawImage(example, 0, 0);
           //console.log(event)
         });
-/*
-        (function render() {
-          var bodies = Composite.allBodies(engine.world);
-          window.requestAnimationFrame(render);
-          let context = canvas.getContext('2d');
 
-          context.fillStyle = '#fff';
-          context.fillRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(example, 0, 0);
-          context.beginPath();
-          for (var i = 0; i < bodies.length; i += 1) {
-            var vertices = bodies[i].vertices;
-            context.moveTo(vertices[0].x, vertices[0].y);
 
-            for (var j = 1; j < vertices.length; j += 1) {
-              context.lineTo(vertices[j].x, vertices[j].y);
-            }
-
-            context.lineTo(vertices[0].x, vertices[0].y);
-          }
-          context.lineWidth = 1;
-          context.strokeStyle = '#999';
-          context.stroke();
-        })();
-*/
-        World.add(engine.world, boxes);
         Engine.run(engine);
         Render.run(render);
 
@@ -184,12 +187,13 @@
           canvas.height = window.innerHeight;
           let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
             image: imageList[0],
-            row: 4,
-            column: 4
+            row: 10,
+            column: 8
           });
-          let p = puzzleMaker.createPieces();
-          p.then(function(pieces){
-            createPuzzle(canvas, pieces, puzzleMaker.column, puzzleMaker.row, imageList[0])
+          let backgroundPieces = puzzleMaker.createPieces({ grayscale:true });
+          let puzzlePieces = puzzleMaker.createPieces();
+          Promise.all([backgroundPieces, puzzlePieces]).then(values => {
+            createPuzzle(canvas, values[0], puzzleMaker.column, puzzleMaker.row, imageList[0])
           });
         });
       });
