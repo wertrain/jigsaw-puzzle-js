@@ -32,7 +32,7 @@
     <script src="./js/jigsawpuzzle.js"></script>
     <script>
 
-      let createPuzzle = (canvas, pieces, column, row, example) => {
+      let createPuzzle = (canvas, puzzlePieces, backgroundPieces, column, row, example) => {
         const Engine = Matter.Engine,
               Render = Matter.Render,
               World = Matter.World,
@@ -49,7 +49,7 @@
             options: {
                 width: canvas.width,
                 height: canvas.height,
-                background: '#fff',
+                background: '#000',
                 wireframes: false,
                 //showAngleIndicator: true,
                 //showStats: true,
@@ -57,7 +57,6 @@
                 //showVertexNumbers: true
             }
         });
-        console.log(render);
         const groundWidth = canvas.width, groundHeight = canvas.height, groundThickness = 4;
         var ground = Bodies.rectangle(groundWidth / 2  - groundThickness, groundHeight - groundThickness, groundWidth, groundThickness, { isStatic: true, render: {fillStyle: '#000'} });
         var wallL = Bodies.rectangle(0, groundHeight / 2 - groundThickness, groundThickness * 2, groundHeight, { isStatic: true, render: {fillStyle: '#000'} });
@@ -83,7 +82,7 @@
           }
         );
 
-        let createBoxes = (pieceOffset, func) => {
+        let createBoxes = (pieces, pieceOffset, func) => {
           let boxes = []
           let pieceOffsetHalf = pieceOffset * 0.5;
           for (let y = 0; y < column; ++y) {
@@ -111,10 +110,8 @@
           return boxes;
         };
 
-        let exampleBoxes = createBoxes(3, (box) => {
+        let exampleBoxes = createBoxes(backgroundPieces, 3, (box) => {
             box.isStatic = true;
-            let power = 20.0;
-            Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
             box.collisionFilter = {
               'group': -1,
               'category': 2,
@@ -122,8 +119,8 @@
             };
         });
 
-        let boxes = createBoxes(0, (box) => {
-            box.isStatic = false;
+        let boxes = createBoxes(puzzlePieces, 0, (box) => {
+            box.isStatic = true;
             let power = 20.0;
             Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
         });
@@ -145,7 +142,12 @@
         World.add(engine.world, mouseConstraint);
 
         Matter.Events.on(mouseConstraint, "mousedown", function(event) {
-          //World.add(engine.world, Bodies.circle(150, 50, 30, { restitution: 0.7 }));
+          boxes.forEach((box) => {
+            let power = 20.0;
+            Body.setVelocity(box, {x: -power + (Math.random() * (power * 2)), y: -power + (Math.random() * (power * 2))});
+            box.isStatic = false;
+          });
+          Matter.Events.off(mouseConstraint, "mousedown");
         });
 
         // an example of using mouse events on a mouse
@@ -179,10 +181,11 @@
         }, false);*/
       };
 
-      //imageList = JigsawPuzzle.Common.loadImages(["./image/sample.jpg"], function() {
+      // パズルの元画像を読み込み
       let loaded = JigsawPuzzle.Common.loadImages([JigsawPuzzle.Resources.Image.Sample]);
-      loaded.then(function(imageList) {
-        JigsawPuzzle.Common.run(function(context, canvas) {
+      // 元画像のロード完了後に処理する
+      loaded.then((imageList) => {
+        JigsawPuzzle.Common.run((context, canvas) => {
           canvas.width = window.innerWidth;
           canvas.height = window.innerHeight;
           let puzzleMaker = new JigsawPuzzle.Core.JigsawPuzzleMaker({
@@ -193,7 +196,7 @@
           let backgroundPieces = puzzleMaker.createPieces({ grayscale:true });
           let puzzlePieces = puzzleMaker.createPieces();
           Promise.all([backgroundPieces, puzzlePieces]).then(values => {
-            createPuzzle(canvas, values[0], puzzleMaker.column, puzzleMaker.row, imageList[0])
+            createPuzzle(canvas, values[1], values[0], puzzleMaker.column, puzzleMaker.row, imageList[0])
           });
         });
       });
