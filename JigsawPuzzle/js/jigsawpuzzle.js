@@ -10,7 +10,6 @@
   /** ピース全体の画像サイズ */
   const PIECE_SIZE = IMAGE_SPLIT_SIZE + (PIECE_JOINT_SIZE * 2);
 
-
   /**
    * 一つのピースを表すクラス
    */
